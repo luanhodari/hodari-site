@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maurino 2026 · briefing estratégico</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
+
+:root {
+  --bg: #0b0d10;
+  --surface: #131620;
+  --surface2: #1a1f2e;
+  --border: #252c3d;
+  --border2: #2e3850;
+  --gold: #d4a843;
+  --gold2: #f0c96a;
+  --red: #c94040;
+  --green: #3d9e6a;
+  --blue: #3a7bd5;
+  --text: #d8dde8;
+  --dim: #5a6378;
+  --dim2: #7a8499;
+  --white: #f0f2f7;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ─── NAV ─── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(11,13,16,.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 0; padding: 0 32px;
+  height: 52px;
+}
+.nav-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 15px; font-weight: 900;
+  color: var(--gold); letter-spacing: 1px;
+  margin-right: 32px; white-space: nowrap;
+}
+.nav-links { display: flex; gap: 2px; flex: 1; overflow-x: auto; }
+.nav-links::-webkit-scrollbar { display: none; }
+.nav-link {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--dim2); padding: 6px 14px;
+  background: none; border: none; cursor: pointer;
+  white-space: nowrap; transition: color .2s;
+  border-bottom: 2px solid transparent;
+}
+.nav-link:hover { color: var(--text); }
+.nav-link.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+/* ─── WRAPPER ─── */
+.wrapper { max-width: 1100px; margin: 0 auto; padding: 80px 24px 60px; }
+
+/* ─── SECTIONS ─── */
+.section { display: none; animation: fadeIn .3s ease; }
+.section.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ─── HERO ─── */
+.hero {
+  padding: 48px 0 40px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 40px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 32px;
+  align-items: end;
+}
+.hero-tag {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  letter-spacing: 3px; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 12px;
+}
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(36px, 5vw, 58px);
+  font-weight: 900; color: var(--white);
+  line-height: .95; letter-spacing: -1px;
+}
+.hero h1 em { color: var(--gold); font-style: normal; }
+.hero-sub {
+  font-size: 14px; color: var(--dim2); margin-top: 12px; max-width: 480px;
+}
+.hero-meta { text-align: right; }
+.hero-date {
+  font-family: 'DM Mono', monospace; font-size: 11px;
+  color: var(--dim); letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+.hero-badge {
+  display: inline-block;
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  padding: 4px 10px; letter-spacing: 1px;
+  background: rgba(212,168,67,.1);
+  border: 1px solid rgba(212,168,67,.3);
+  color: var(--gold);
+}
+
+/* ─── SECTION HEADER ─── */
+.sec-header { margin-bottom: 28px; }
+.sec-label {
+  font-family: 'DM Mono', monospace; font-size: 9px;
+  letter-spacing: 3px; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 6px;
+}
+.sec-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(26px, 4vw, 38px); font-weight: 900;
+  color: var(--white); letter-spacing: -.5px;
+}
+.sec-desc { font-size: 13px; color: var(--dim2); margin-top: 6px; max-width: 600px; }
+
+/* ─── CARDS GRID ─── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+@media(max-width: 700px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  .hero { grid-template-columns: 1fr; }
+  .hero-meta { text-align: left; }
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 20px;
+  transition: border-color .2s;
+}
+.card:hover { border-color: var(--border2); }
+.card-label {
+  font-family: 'DM Mono', monospace; font-size: 9px;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--dim); margin-bottom: 8px;
+}
+.card-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 42px; font-weight: 900;
+  color: var(--white); line-height: 1;
+}
+.card-num.gold { color: var(--gold); }
+.card-num.green { color: var(--green); }
+.card-num.red { color: var(--red); }
+.card-sub { font-size: 12px; color: var(--dim2); margin-top: 4px; }
+
+/* ─── ALERTA ─── */
+.alert {
+  padding: 16px 20px; margin-bottom: 20px;
+  border-left: 3px solid;
+  background: var(--surface);
+  display: flex; gap: 14px; align-items: flex-start;
+}
+.alert.warn { border-color: var(--gold); }
+.alert.danger { border-color: var(--red); }
+.alert.ok { border-color: var(--green); }
+.alert-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+.alert-title { font-size: 13px; font-weight: 600; color: var(--white); margin-bottom: 4px; }
+.alert-body { font-size: 12px; color: var(--dim2); line-height: 1.6; }
+
+/* ─── TABLE ─── */
+.tbl-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+thead th {
+  font-family: 'DM Mono', monospace; font-size: 9px;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--dim); padding: 8px 12px; text-align: right;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface); white-space: nowrap;
+}
+thead th:first-child, thead th:nth-child(2) { text-align: left; }
+tbody tr:hover td { background: var(--surface2); }
+td {
+  padding: 8px 12px; border-bottom: 1px solid var(--border);
+  text-align: right; color: var(--dim2);
+}
+td:first-child { text-align: left; color: var(--text); font-weight: 500; }
+td:nth-child(2) { text-align: left; }
+td.gold { color: var(--gold); font-weight: 600; }
+td.red { color: var(--red); }
+td.green { color: var(--green); }
+.tbl-group td {
+  background: #0e1018;
+  font-family: 'DM Mono', monospace; font-size: 9px;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--dim); padding: 5px 12px;
+  border-top: 1px solid var(--border);
+}
+
+/* ─── BADGE ─── */
+.badge {
+  display: inline-block; font-family: 'DM Mono', monospace;
+  font-size: 9px; padding: 2px 7px; letter-spacing: .5px;
+  border-radius: 2px; white-space: nowrap;
+}
+.badge-max { background: rgba(201,64,64,.15); color: #e07070; border: 1px solid rgba(201,64,64,.3); }
+.badge-high { background: rgba(212,168,67,.12); color: var(--gold); border: 1px solid rgba(212,168,67,.3); }
+.badge-med { background: rgba(58,123,213,.12); color: #7aaaf0; border: 1px solid rgba(58,123,213,.3); }
+.badge-low { background: rgba(90,99,120,.1); color: var(--dim2); border: 1px solid var(--border); }
+.badge-ok { background: rgba(61,158,106,.12); color: #6fca99; border: 1px solid rgba(61,158,106,.3); }
+.badge-warn { background: rgba(212,168,67,.12); color: var(--gold); border: 1px solid rgba(212,168,67,.3); }
+.badge-danger { background: rgba(201,64,64,.15); color: #e07070; border: 1px solid rgba(201,64,64,.3); }
+
+/* ─── PROGRESS BAR ─── */
+.prog-wrap { background: var(--surface2); height: 6px; margin-top: 6px; }
+.prog-fill { height: 100%; transition: width .5s ease; }
+.prog-gold { background: var(--gold); }
+.prog-red { background: var(--red); }
+.prog-green { background: var(--green); }
+.prog-blue { background: var(--blue); }
+
+/* ─── MINI BAR (inline) ─── */
+.mini-bar { height: 3px; background: var(--border); margin-top: 5px; }
+.mini-fill { height: 100%; background: var(--gold); }
+
+/* ─── COMPARISON ─── */
+.compare-row {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 2px; margin-bottom: 2px;
+}
+.compare-cell {
+  background: var(--surface); padding: 14px 18px;
+  border: 1px solid var(--border);
+}
+.compare-cell.bad { border-left: 2px solid var(--red); }
+.compare-cell.good { border-left: 2px solid var(--green); }
+.compare-label {
+  font-family: 'DM Mono', monospace; font-size: 9px;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.compare-label.bad { color: var(--red); }
+.compare-label.good { color: var(--green); }
+.compare-text { font-size: 12px; color: var(--dim2); line-height: 1.6; }
+.compare-text strong { color: var(--text); }
+
+/* ─── PREFEITO CARD ─── */
+.pref-card {
+  background: var(--surface); border: 1px solid var(--border);
+  padding: 20px; transition: border-color .2s;
+  cursor: default;
+}
+.pref-card:hover { border-color: var(--gold); }
+.pref-rank {
+  font-family: 'Playfair Display', serif; font-size: 32px;
+  font-weight: 900; color: var(--border2);
+  float: right; line-height: 1;
+}
+.pref-cidade { font-size: 16px; font-weight: 600; color: var(--white); margin-bottom: 4px; }
+.pref-nome { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--gold); margin-bottom: 10px; }
+.pref-votos {
+  font-family: 'Playfair Display', serif; font-size: 28px;
+  font-weight: 900; color: var(--white); margin: 10px 0 2px;
+}
+.pref-voto-label { font-size: 11px; color: var(--dim2); margin-bottom: 12px; }
+.pref-insight { font-size: 11px; color: var(--dim2); line-height: 1.6; border-top: 1px solid var(--border); padding-top: 10px; margin-top: 10px; }
+.pref-insight strong { color: var(--text); }
+.script-box {
+  background: rgba(212,168,67,.05); border: 1px solid rgba(212,168,67,.2);
+  padding: 10px 14px; margin-top: 10px;
+  font-size: 11px; color: #b89a50; line-height: 1.6; font-style: italic;
+}
+.pref-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+
+/* ─── METODOLOGIA ─── */
+.metod-box {
+  background: var(--surface); border: 1px solid var(--border);
+  padding: 20px; margin-bottom: 16px;
+}
+.metod-title {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 10px;
+}
+.formula {
+  background: var(--bg); border: 1px solid var(--border);
+  padding: 12px 16px; font-family: 'DM Mono', monospace;
+  font-size: 12px; color: var(--text); letter-spacing: .5px;
+  margin: 8px 0;
+}
+
+/* ─── DIVIDER ─── */
+.divider { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+
+/* ─── SCENARIO TABS ─── */
+.scenario-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+.stab {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  letter-spacing: 1px; text-transform: uppercase;
+  padding: 7px 16px; background: var(--surface);
+  border: 1px solid var(--border); color: var(--dim2);
+  cursor: pointer; transition: all .15s;
+}
+.stab.active { background: var(--gold); border-color: var(--gold); color: #000; font-weight: 600; }
+.stab:hover:not(.active) { border-color: var(--border2); color: var(--text); }
+
+/* ─── TIMELINE ─── */
+.timeline { position: relative; padding-left: 28px; }
+.timeline::before {
+  content: ''; position: absolute; left: 8px; top: 6px; bottom: 6px;
+  width: 1px; background: var(--border);
+}
+.tl-item { position: relative; margin-bottom: 20px; }
+.tl-dot {
+  position: absolute; left: -24px; top: 4px;
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--border2); border: 2px solid var(--bg);
+}
+.tl-dot.gold { background: var(--gold); }
+.tl-dot.red { background: var(--red); }
+.tl-dot.green { background: var(--green); }
+.tl-date { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--gold); letter-spacing: 1px; margin-bottom: 4px; }
+.tl-title { font-size: 14px; font-weight: 600; color: var(--white); margin-bottom: 4px; }
+.tl-desc { font-size: 12px; color: var(--dim2); line-height: 1.6; }
+
+/* ─── PILAR CARD ─── */
+.pilar-card {
+  background: var(--surface); border: 1px solid var(--border);
+  padding: 22px; border-top: 2px solid;
+}
+.pilar-card.p1 { border-top-color: var(--gold); }
+.pilar-card.p2 { border-top-color: var(--red); }
+.pilar-card.p3 { border-top-color: var(--blue); }
+.pilar-num { font-family: 'Playfair Display', serif; font-size: 48px; font-weight: 900; color: var(--border2); line-height: 1; margin-bottom: 4px; }
+.pilar-title { font-size: 15px; font-weight: 600; color: var(--white); margin-bottom: 8px; }
+.pilar-body { font-size: 12px; color: var(--dim2); line-height: 1.6; }
+.pilar-eleit { margin-top: 10px; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--dim); letter-spacing: 1px; }
+
+/* ─── FULL ROW CARD ─── */
+.full { grid-column: 1 / -1; }
+
+/* ─── FOOTER ─── */
+.page-footer {
+  max-width: 1100px; margin: 0 auto;
+  padding: 20px 24px; font-family: 'DM Mono', monospace;
+  font-size: 10px; color: var(--dim); letter-spacing: 1px;
+  border-top: 1px solid var(--border);
+  display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+}
+
+/* ─── TOTALIZADOR ─── */
+.total-box {
+  background: var(--surface2); border: 1px solid var(--border2);
+  padding: 20px 24px; display: flex; align-items: center;
+  justify-content: space-between; gap: 20px; flex-wrap: wrap;
+  margin: 20px 0;
+}
+.total-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--dim); }
+.total-num {
+  font-family: 'Playfair Display', serif; font-size: 52px;
+  font-weight: 900; color: var(--white); line-height: 1;
+}
+.total-num.ok { color: var(--green); }
+.total-num.warn { color: var(--gold); }
+.total-target { font-size: 12px; color: var(--dim2); }
+.total-bar-wrap { flex: 1; min-width: 200px; }
+.total-bar-bg { background: var(--surface); height: 8px; }
+.total-bar-fill { height: 100%; transition: width .6s ease; }
+
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">MAURINO 2026</div>
+  <div class="nav-links">
+    <button class="nav-link active" onclick="showSection('visao')">Visão Geral</button>
+    <button class="nav-link" onclick="showSection('diagnostico')">Diagnóstico</button>
+    <button class="nav-link" onclick="showSection('votos')">Votos Revisados</button>
+    <button class="nav-link" onclick="showSection('municipios')">Municípios Órfãos</button>
+    <button class="nav-link" onclick="showSection('prefeitos')">Prefeitos-Alvo</button>
+    <button class="nav-link" onclick="showSection('cenario')">Cenário MDB</button>
+    <button class="nav-link" onclick="showSection('agenda')">Agenda</button>
+  </div>
+</nav>
+
+<div class="wrapper">
+
+<!-- ══════════════════════════════════════
+     SEÇÃO 1: VISÃO GERAL
+══════════════════════════════════════ -->
+<section class="section active" id="visao">
+
+  <div class="hero">
+    <div>
+      <div class="hero-tag">Hodari · briefing estratégico revisado</div>
+      <h1>MAURINO<br><em>2026</em></h1>
+      <p class="hero-sub">Análise estratégica da pré-candidatura a Deputado Estadual pelo MDB no Paraná. Inclui revisão do plano original, mapeamento de municípios órfãos e script de abordagem a prefeitos.</p>
+    </div>
+    <div class="hero-meta">
+      <div class="hero-date">30 DE MAIO DE 2026</div>
+      <div class="hero-badge">CONFIDENCIAL</div>
+    </div>
+  </div>
+
+  <!-- KPIs -->
+  <div class="grid-4" style="margin-bottom:24px">
+    <div class="card">
+      <div class="card-label">meta de votos</div>
+      <div class="card-num gold">35–40k</div>
+      <div class="card-sub">Revisada (era 50k no deck)</div>
+    </div>
+    <div class="card">
+      <div class="card-label">municípios órfãos mapeados</div>
+      <div class="card-num">62</div>
+      <div class="card-sub">Sem deputado com base real</div>
+    </div>
+    <div class="card">
+      <div class="card-label">prefeitos-alvo prioritários</div>
+      <div class="card-num gold">8</div>
+      <div class="card-sub">Para abordagem imediata</div>
+    </div>
+    <div class="card">
+      <div class="card-label">potencial com prefeitos</div>
+      <div class="card-num green">44k</div>
+      <div class="card-sub">Cenário: alianças confirmadas</div>
+    </div>
+  </div>
+
+  <!-- PILARES -->
+  <div class="sec-header">
+    <div class="sec-label">identidade do candidato</div>
+    <div class="sec-title">três pilares reais</div>
+    <div class="sec-desc">O Dep. José Maurino tem um diferencial genuíno e raro. Nenhum outro candidato ao ALEP 2026 reúne esses três perfis simultaneamente.</div>
+  </div>
+
+  <div class="grid-3" style="margin-bottom:28px">
+    <div class="pilar-card p1">
+      <div class="pilar-num">01</div>
+      <div class="pilar-title">o gestor de inovação</div>
+      <div class="pilar-body">Idealizador do SEPARTEC. 43 anos de gestão pública. Mestre em Economia pela UFPR. O único candidato que conhece por dentro como a política estadual de CT&I funciona, e como ela pode gerar emprego concreto no interior.</div>
+      <div class="pilar-eleit">→ Fala com: empresários, academia, servidores, ecossistema de inovação</div>
+    </div>
+    <div class="pilar-card p2">
+      <div class="pilar-num">02</div>
+      <div class="pilar-title">o militante histórico</div>
+      <div class="pilar-body">40+ anos de luta antirracista real. Presidente da ACNAP (1996/97). Pastoral Negra. CUFA. Não é discurso. É trajetória documentada desde os anos 80, quando poucos tinham coragem de se posicionar.</div>
+      <div class="pilar-eleit">→ Fala com: movimento negro, periferia de Curitiba, CUFA, igrejas</div>
+    </div>
+    <div class="pilar-card p3">
+      <div class="pilar-num">03</div>
+      <div class="pilar-title">o filho de Campo Mourão</div>
+      <div class="pilar-body">Cresceu no Jardim Santa Cruz. Fundador da Associação de Moradores, UNIMAM e FAMOPAR. Apresentador de rádio na Colmeia. A caneta da Vovó Dindinha é um símbolo de ascensão pela educação que o interior entende.</div>
+      <div class="pilar-eleit">→ Fala com: Campo Mourão, COMCAM, interior do PR, lideranças comunitárias</div>
+    </div>
+  </div>
+
+  <!-- ALERTA MACRO -->
+  <div class="alert ok">
+    <div class="alert-icon">🟢</div>
+    <div>
+      <div class="alert-title">MDB lança chapa própria ao governo, o que fortalece o Dep. José Maurino</div>
+      <div class="alert-body">Em abril/2026 o MDB oficializou Rafael Greca ao governo e Álvaro Dias ao Senado. O Dep. José Maurino pode se apresentar como parte de uma chapa completa e equilibrada. Prefeitos do interior que querem diversificar alianças têm agora uma razão concreta para apoiar o MDB.</div>
+    </div>
+  </div>
+
+  <div class="alert warn">
+    <div class="alert-icon">⚠️</div>
+    <div>
+      <div class="alert-title">o deck original tem problemas sérios que precisam ser corrigidos</div>
+      <div class="alert-body">Meta de 20.000 votos em Curitiba é irreal para um estreante com 4 coordenadores. Campo Mourão está subestimada estrategicamente. Paranaguá está invisível no plano sendo o maior vácuo político do estado. Ver seção Diagnóstico.</div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ══════════════════════════════════════
+     SEÇÃO 2: DIAGNÓSTICO
+══════════════════════════════════════ -->
+<section class="section" id="diagnostico">
+
+  <div class="sec-header">
+    <div class="sec-label">análise do deck original</div>
+    <div class="sec-title">o que está certo e o que precisa mudar</div>
+    <div class="sec-desc">Revisão crítica do arquivo apresentado pelo candidato em 30/05/2026. Sem filtro.</div>
+  </div>
+
+  <!-- PONTOS FORTES -->
+  <div style="margin-bottom:12px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--green)">✓ O que está forte</div>
+  <div class="alert ok" style="margin-bottom:8px">
+    <div class="alert-icon">✅</div>
+    <div>
+      <div class="alert-title">perfil técnico real e raro</div>
+      <div class="alert-body">43 anos de gestão pública, mestrado UFPR, SEPARTEC, professor universitário. Nenhum outro candidato a estadual em 2026 tem esse currículo concreto. Isso não é narrativa inventada. É diferencial verificável.</div>
+    </div>
+  </div>
+  <div class="alert ok" style="margin-bottom:8px">
+    <div class="alert-icon">✅</div>
+    <div>
+      <div class="alert-title">os três pilares do produto político estão bem definidos</div>
+      <div class="alert-body">Gestor de Inovação + Militante Histórico + Filho de Campo Mourão. Cada um fala com um eleitorado diferente sem se contradizer. É uma arquitetura de comunicação sólida.</div>
+    </div>
+  </div>
+  <div class="alert ok" style="margin-bottom:24px">
+    <div class="alert-icon">✅</div>
+    <div>
+      <div class="alert-title">estrutura de coordenadores locais existe</div>
+      <div class="alert-body">Presença em Campo Mourão (4 coordenadores), Curitiba (4 pontos), Maringá, Londrina, Cascavel, Foz, Guarapuava, Paranaguá. Base operacional real, ainda que irregular em distribuição.</div>
+    </div>
+  </div>
+
+  <!-- PROBLEMAS -->
+  <div style="margin-bottom:12px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--red)">✗ O que precisa mudar</div>
+
+  <!-- comparação -->
+  <div class="compare-row" style="margin-bottom:2px">
+    <div class="compare-cell bad">
+      <div class="compare-label bad">❌ Deck original · Curitiba</div>
+      <div class="compare-text"><strong>Meta: 20.000 votos</strong><br>Com apenas 4 coordenadores de bairro (sendo que Luiz Gringo cobre 2 áreas). Nenhum acordo com prefeito ou deputado federal de peso. Curitiba tem 54 candidatos brigando por cada nicho. Meta irrealizável.</div>
+    </div>
+    <div class="compare-cell good">
+      <div class="compare-label good">✅ Revisado · Curitiba</div>
+      <div class="compare-text"><strong>Meta: 4.000–5.000 votos</strong><br>Concentrar em nichos reais: periferia (CUFA/Prof. Euler), movimento negro (Aloisio), servidores CT&I (Tobias). Votos de qualidade, não quantidade. Realista e executável.</div>
+    </div>
+  </div>
+  <div class="compare-row" style="margin-bottom:2px">
+    <div class="compare-cell bad">
+      <div class="compare-label bad">❌ Deck original · Campo Mourão</div>
+      <div class="compare-text"><strong>Tratada como "base emocional"</strong><br>Projeto 14.500 votos mas não apresenta estratégia para a COMCAM (25 municípios). Sem mapa de prefeitos, sem script de abordagem, sem estimativa por município.</div>
+    </div>
+    <div class="compare-cell good">
+      <div class="compare-label good">✅ Revisado · Campo Mourão</div>
+      <div class="compare-text"><strong>Âncora real da campanha</strong><br>COMCAM tem 25 municípios. O Dep. José Maurino tem raiz, história e coordenadores. Com Sérgio Souza como dobradinha (deputado federal da região), o potencial é entre 10.000 e 14.000 votos reais e verificáveis.</div>
+    </div>
+  </div>
+  <div class="compare-row" style="margin-bottom:2px">
+    <div class="compare-cell bad">
+      <div class="compare-label bad">❌ Deck original · Paranaguá</div>
+      <div class="compare-text"><strong>1.000 votos. 1 coordenador.</strong><br>Paranaguá é o maior vácuo político do estado. Lançou 20 candidatos em 2022 e não elegeu nenhum. Tem 108k eleitores e zero representação na ALEP. O deck praticamente ignora isso.</div>
+    </div>
+    <div class="compare-cell good">
+      <div class="compare-label good">✅ Revisado · Paranaguá</div>
+      <div class="compare-text"><strong>Meta: entre 3.000 e 5.200 votos</strong><br>Com aliança com o prefeito Adriano Ramos (Republicanos, eleito com 72%). Paranaguá precisa de um deputado. O Dep. José Maurino pode ser esse deputado. Oportunidade máxima.</div>
+    </div>
+  </div>
+  <div class="compare-row" style="margin-bottom:2px">
+    <div class="compare-cell bad">
+      <div class="compare-label bad">❌ Deck original · Pauta CT&I</div>
+      <div class="compare-text"><strong>Linguagem acadêmica fria</strong><br>"Governança executiva do ecossistema de CT&I", "microcredenciais", "capacidades críticas". São slides de dissertação, não de campanha eleitoral. O eleitor de Irati ou Cornélio Procópio não vota em jargão.</div>
+    </div>
+    <div class="compare-cell good">
+      <div class="compare-label good">✅ Revisado · Pauta CT&I</div>
+      <div class="compare-text"><strong>Traduzir em impacto humano</strong><br>"Tecnologia que cria emprego na sua cidade." "Sua filha não precisa ir pra São Paulo trabalhar com tecnologia." "Universidade como motor do desenvolvimento regional." Técnico em emocional.</div>
+    </div>
+  </div>
+  <div class="compare-row" style="margin-bottom:24px">
+    <div class="compare-cell bad">
+      <div class="compare-label bad">❌ Deck original · Orçamento</div>
+      <div class="compare-text"><strong>R$200k em mobilização de campo</strong><br>Risco jurídico e operacional alto. Cabos eleitorais mal gerenciados são fonte de problemas legais. Para um primeiro mandato, é distribuição perigosa.</div>
+    </div>
+    <div class="compare-cell good">
+      <div class="compare-label good">✅ Revisado · Orçamento</div>
+      <div class="compare-text"><strong>Dobrar digital, cortar mobilização</strong><br>R$100k em marketing digital é pouco para 50k votos. Aumentar para R$150k e compensar cortando mobilização de campo. Presença de prefeito aliado substitui cabo eleitoral pago.</div>
+    </div>
+  </div>
+
+  <!-- DIVERGÊNCIA DE DADOS -->
+  <div class="alert danger">
+    <div class="alert-icon">🚨</div>
+    <div>
+      <div class="alert-title">divergência de dados entre os arquivos. isso precisa ser resolvido antes da reunião</div>
+      <div class="alert-body">
+        O PDF de apresentação (mauri1.pdf) e o PPTX (maurinosexta.pptx) têm informações conflitantes:<br><br>
+        <strong>Orçamento:</strong> PDF → R$499.800 / PPTX → R$600.000 (diferença de R$100.200)<br>
+        <strong>Pessoal/Mobilização:</strong> PDF → R$129.600 / PPTX → R$200.000<br>
+        <strong>Pessoal/Coordenadores:</strong> PDF → R$97.200 / PPTX → R$100.000<br>
+        <strong>Combustível:</strong> PDF → R$5.000 / PPTX → R$25.000<br>
+        <strong>Alimentação:</strong> PDF → R$3.000 / PPTX → R$25.000<br>
+        <strong>Locação de Comitê:</strong> PDF → R$15.000 / PPTX → ausente<br><br>
+        <strong>Recomendação:</strong> Definir o orçamento oficial antes de qualquer apresentação pública ou aos doadores. Os dois documentos estão em circulação com números diferentes.
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ══════════════════════════════════════
+     SEÇÃO 3: VOTOS REVISADOS
+══════════════════════════════════════ -->
+<section class="section" id="votos">
+
+  <div class="sec-header">
+    <div class="sec-label">projeção revisada</div>
+    <div class="sec-title">estimativa de votos por município</div>
+    <div class="sec-desc">Metodologia transparente. 4 cenários. Comparação com o deck original. Clique no cenário para atualizar os números.</div>
+  </div>
+
+  <!-- METODOLOGIA -->
+  <div class="metod-box" style="margin-bottom:20px">
+    <div class="metod-title">📐 como os votos são calculados</div>
+    <div class="formula">VOTOS ESTIMADOS = Eleitorado TRE-PR 2024 × 80% (comparecimento) × Taxa de penetração</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px">
+      <div style="background:var(--bg);border:1px solid var(--border);padding:12px;text-align:center">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--dim);letter-spacing:1px;margin-bottom:4px">SEM ALIANÇA</div>
+        <div style="font-family:'Playfair Display',serif;font-size:22px;color:var(--text)">1,5%</div>
+        <div style="font-size:10px;color:var(--dim2);margin-top:4px">Só digital + visitas</div>
+      </div>
+      <div style="background:var(--bg);border:1px solid var(--border);padding:12px;text-align:center">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--dim);letter-spacing:1px;margin-bottom:4px">1 VEREADOR</div>
+        <div style="font-family:'Playfair Display',serif;font-size:22px;color:var(--text)">3,0%</div>
+        <div style="font-size:10px;color:var(--dim2);margin-top:4px">Um apoio local</div>
+      </div>
+      <div style="background:rgba(212,168,67,.05);border:1px solid rgba(212,168,67,.3);padding:12px;text-align:center">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:1px;margin-bottom:4px">PREFEITO ALIADO ★</div>
+        <div style="font-family:'Playfair Display',serif;font-size:22px;color:var(--gold)">6,0%</div>
+        <div style="font-size:10px;color:var(--dim2);margin-top:4px">Máquina municipal</div>
+      </div>
+      <div style="background:var(--bg);border:1px solid var(--border);padding:12px;text-align:center">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--dim);letter-spacing:1px;margin-bottom:4px">ESTRUTURADO</div>
+        <div style="font-family:'Playfair Display',serif;font-size:22px;color:var(--text)">10,0%</div>
+        <div style="font-size:10px;color:var(--dim2);margin-top:4px">Pref + campanha</div>
+      </div>
+    </div>
+    <div style="margin-top:12px;font-size:11px;color:var(--dim2);line-height:1.7">
+      <strong style="color:var(--text)">Base de comparação:</strong> Deputados eleitos em 2022 obtiveram entre 33.000 e 237.000 votos. Estreantes realistas: 33.000–50.000. 
+      Abstenção média estadual 2022: 20%. Eleitorado estadual total: ~8,4M. Quociente eleitoral estimado 2026: ~130k votos por vaga ÷ coeficiente partidário ≈ 30–35k para primeiro mandato MDB.
+    </div>
+  </div>
+
+  <!-- CENARIO TABS -->
+  <div class="scenario-tabs">
+    <button class="stab" onclick="setCen(0)">Sem aliança</button>
+    <button class="stab" onclick="setCen(1)">1 Vereador</button>
+    <button class="stab active" onclick="setCen(2)">Prefeito aliado ★</button>
+    <button class="stab" onclick="setCen(3)">Estruturado</button>
+  </div>
+
+  <!-- TOTALIZADOR -->
+  <div class="total-box">
+    <div>
+      <div class="total-label">Total projetado</div>
+      <div class="total-num ok" id="total-num">44.439</div>
+      <div class="total-target">Alvo mínimo: 35.000 votos</div>
+    </div>
+    <div class="total-bar-wrap">
+      <div style="display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:9px;color:var(--dim);margin-bottom:4px">
+        <span>0</span><span id="pct-label">127% do alvo</span><span>50k</span>
+      </div>
+      <div class="total-bar-bg">
+        <div class="total-bar-fill prog-green" id="total-bar" style="width:89%"></div>
+      </div>
+    </div>
+    <div>
+      <div class="total-label">vs. Deck original</div>
+      <div style="font-family:'Playfair Display',serif;font-size:28px;color:var(--red);line-height:1">50.000</div>
+      <div class="total-target" style="color:var(--red)">Meta original (irreal)</div>
+    </div>
+  </div>
+
+  <!-- TABELA -->
+  <div class="tbl-wrap">
+  <table id="votos-table">
+  <thead>
+    <tr>
+      <th style="text-align:left">#</th>
+      <th style="text-align:left">Município</th>
+      <th>Oportunidade</th>
+      <th>Eleitorado</th>
+      <th>Sem aliança</th>
+      <th>1 Vereador</th>
+      <th class="col-pref">C/ Prefeito ★</th>
+      <th>Estruturado</th>
+      <th style="text-align:left">Deck original</th>
+      <th style="text-align:left">Δ Diferença</th>
+    </tr>
+  </thead>
+  <tbody id="votos-tbody"></tbody>
+  </table>
+  </div>
+
+</section>
+
+<!-- ══════════════════════════════════════
+     SEÇÃO 4: MUNICÍPIOS ÓRFÃOS
+══════════════════════════════════════ -->
+<section class="section" id="municipios">
+
+  <div class="sec-header">
+    <div class="sec-label">análise territorial</div>
+    <div class="sec-title">municípios sem deputado de base</div>
+    <div class="sec-desc">O Paraná tem 399 municípios e 54 deputados. A maioria concentra base em 5–10 cidades. ~45% do estado está em vácuo político real.</div>
+  </div>
+
+  <div class="grid-4" style="margin-bottom:24px">
+    <div class="card"><div class="card-label">municípios no PR</div><div class="card-num">399</div></div>
+    <div class="card"><div class="card-label">deputados na ALEP</div><div class="card-num">54</div></div>
+    <div class="card"><div class="card-label">Sem padrinho real</div><div class="card-num red">~180</div></div>
+    <div class="card"><div class="card-label">% em vácuo</div><div class="card-num gold">45%</div></div>
+  </div>
+
+  <!-- REGIÕES -->
+  <div id="regioes-container"></div>
+
+</section>
+
+<!-- ══════════════════════════════════════
+     SEÇÃO 5: PREFEITOS-ALVO
+══════════════════════════════════════ -->
+<section class="section" id="prefeitos">
+
+  <div class="sec-header">
+    <div class="sec-label">estratégia de alianças</div>
+    <div class="sec-title">8 prefeitos para abordar agora</div>
+    <div class="sec-desc">Por que cada um, como abordar, o que faz cada prefeito se interessar e o script de abertura.</div>
+  </div>
+
+  <div class="alert ok" style="margin-bottom:20px">
+    <div class="alert-icon">💡</div>
+    <div>
+      <div class="alert-title">por que prefeito vale mais que cabo eleitoral</div>
+      <div class="alert-body">Um prefeito que apoia publicamente substitui 10 cabos eleitorais pagos. Ele tem legitimidade, rede, acesso à máquina municipal e influência direta sobre vereadores. Um acordo com o prefeito de Paranaguá vale mais do que R$50k em mobilização de campo.</div>
+    </div>
+  </div>
+
+  <div id="prefeitos-container"></div>
+
+  <!-- FRAMEWORK -->
+  <hr class="divider">
+  <div class="sec-header">
+    <div class="sec-label">framework de abordagem</div>
+    <div class="sec-title">3 tipos de prefeito, 3 narrativas</div>
+  </div>
+  <div class="grid-3">
+    <div class="card">
+      <div class="card-label">tipo A · sem representação</div>
+      <div style="font-size:13px;font-weight:600;color:var(--white);margin:8px 0">Cidade invisível na ALEP</div>
+      <div style="font-size:12px;color:var(--dim2);line-height:1.6">Prefeito com votos folgados mas cidade sem deputado. Toda demanda depende de político de outra cidade que não deve nada a ele.</div>
+      <div class="script-box" style="margin-top:12px">"Prefeito, sua cidade não tem representação em Curitiba. Quero ser o deputado da sua região."</div>
+    </div>
+    <div class="card">
+      <div class="card-label">tipo B · vencedor apertado</div>
+      <div style="font-size:13px;font-weight:600;color:var(--white);margin:8px 0">Mandato inseguro</div>
+      <div style="font-size:12px;color:var(--dim2);line-height:1.6">Ganhou por margem estreita. Precisa de aliado na ALEP para garantir emendas, projetos e viabilidade política nos próximos 4 anos.</div>
+      <div class="script-box" style="margin-top:12px">"Prefeito, o senhor tem uma eleição difícil pela frente em 4 anos. Precisa entregar obras, e para isso precisa de um aliado em Curitiba."</div>
+    </div>
+    <div class="card">
+      <div class="card-label">tipo C · anti-PSD</div>
+      <div style="font-size:13px;font-weight:600;color:var(--white);margin:8px 0">Tensão com grupo dominante</div>
+      <div style="font-size:12px;color:var(--dim2);line-height:1.6">Ganhou contra o PSD local. Não quer aliado que fortaleça o grupo adversário. MDB é o partido neutro e independente ideal.</div>
+      <div class="script-box" style="margin-top:12px">"Sou do MDB, partido independente, não devo nada ao grupo que o senhor derrotou. Vou trabalhar pela sua agenda sem conflito de interesse."</div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ══════════════════════════════════════
+     SEÇÃO 6: CENÁRIO MDB
+══════════════════════════════════════ -->
+<section class="section" id="cenario">
+
+  <div class="sec-header">
+    <div class="sec-label">contexto político 2026</div>
+    <div class="sec-title">o MDB no Paraná e o que isso significa</div>
+    <div class="sec-desc">O cenário político estadual mudou em abril/2026. Entender o movimento do partido é essencial para posicionar o Maurino.</div>
+  </div>
+
+  <div class="alert ok" style="margin-bottom:16px">
+    <div class="alert-icon">🟢</div>
+    <div>
+      <div class="alert-title">MDB vai em chapa própria: Greca ao governo, Álvaro Dias ao Senado</div>
+      <div class="alert-body">Oficializado em abril/2026. O partido não está em oposição declarada ao governo Ratinho, mas tem identidade própria. "O MDB continua parceiro do Governo e também tem o seu pré-candidato ao Governador" (Anibelli Neto). Isso é posicionamento de centro, ideal para o Dep. José Maurino.</div>
+    </div>
+  </div>
+
+  <div class="alert warn" style="margin-bottom:16px">
+    <div class="alert-icon">⚠️</div>
+    <div>
+      <div class="alert-title">racha no PSD cria oportunidade para o MDB no interior</div>
+      <div class="alert-body">Ratinho Jr. escolheu Sandro Alex (PSD) ao governo, ignorando Alexandre Curi, Guto Silva e Rafael Greca. O resultado foi rebelião pública na ALEP. Prefeitos que estavam no grupo do governador podem querer diversificar alianças, e o MDB está no lugar certo para capturar isso.</div>
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:24px">
+    <div class="card">
+      <div class="card-label">chapa MDB 2026</div>
+      <div style="margin-top:12px">
+        <div style="border-left:2px solid var(--gold);padding:10px 14px;margin-bottom:8px;background:var(--surface2)">
+          <div style="font-size:11px;color:var(--dim);font-family:'DM Mono',monospace;letter-spacing:1px">GOVERNADOR</div>
+          <div style="font-size:15px;font-weight:600;color:var(--white)">Rafael Greca</div>
+          <div style="font-size:11px;color:var(--dim2)">Ex-prefeito de Curitiba 3x. 70% de aprovação.</div>
+        </div>
+        <div style="border-left:2px solid var(--blue);padding:10px 14px;margin-bottom:8px;background:var(--surface2)">
+          <div style="font-size:11px;color:var(--dim);font-family:'DM Mono',monospace;letter-spacing:1px">SENADO</div>
+          <div style="font-size:15px;font-weight:600;color:var(--white)">Álvaro Dias</div>
+          <div style="font-size:11px;color:var(--dim2)">Ex-governador, ex-senador. 1º nas pesquisas.</div>
+        </div>
+        <div style="border-left:2px solid var(--green);padding:10px 14px;background:var(--surface2)">
+          <div style="font-size:11px;color:var(--dim);font-family:'DM Mono',monospace;letter-spacing:1px">DEPUTADO ESTADUAL</div>
+          <div style="font-size:15px;font-weight:600;color:var(--white)">Dep. José Maurino</div>
+          <div style="font-size:11px;color:var(--dim2)">O candidato que falta na chapa. Interior + inovação + movimento negro.</div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-label">como usar isso na abordagem a prefeitos</div>
+      <div style="margin-top:12px;font-size:12px;color:var(--dim2);line-height:1.8">
+        <div style="margin-bottom:10px;color:var(--text);font-weight:500">Para prefeito de qualquer partido:</div>
+        <div class="script-box">"Nosso partido está lançando Greca ao governo e Álvaro Dias ao Senado. Sou o deputado estadual dessa chapa. Se o senhor quiser ter um aliado com acesso direto ao próximo governador, sou esse aliado."</div>
+        <div style="margin-top:14px;font-size:11px;color:var(--dim2)">
+          <strong style="color:var(--text)">Importante:</strong> O MDB deixou claro que não rompeu com o governo atual. Isso significa que a abordagem funciona tanto com prefeitos de situação quanto de oposição. Flexibilidade de centro é um ativo real.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DYNASTIAS DA ALEP -->
+  <hr class="divider">
+  <div class="sec-header">
+    <div class="sec-label">mapa de poder</div>
+    <div class="sec-title">famílias políticas na ALEP</div>
+    <div class="sec-desc">30% dos 54 deputados chegaram ao cargo carregando um sobrenome que já abriu portas. O Dep. José Maurino é o oposto disso, e isso pode ser narrativa.</div>
+  </div>
+  <div class="tbl-wrap">
+  <table>
+    <thead>
+      <tr><th style="text-align:left">Deputado</th><th style="text-align:left">Partido</th><th style="text-align:left">Origem do poder</th><th>Força</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Alexandre Curi</td><td><span class="badge badge-low">PSD</span></td><td>Neto de Aníbal Khury (5x pres. ALEP) + casado com neta de Paulo Pimentel (ex-gov.)</td><td style="text-align:center">⭐⭐⭐⭐⭐</td></tr>
+      <tr><td>Anibelli Neto</td><td><span class="badge badge-ok">MDB</span></td><td>Filho de Antônio Martins Anibelli (9 mandatos) + neto de Antônio Anibelli (ex-gov. interino)</td><td style="text-align:center">⭐⭐⭐⭐⭐</td></tr>
+      <tr><td>Requião Filho</td><td><span class="badge badge-low">PDT</span></td><td>Filho de Roberto Requião (ex-gov. 2x, ex-senador), neto, sobrinho e primo de políticos</td><td style="text-align:center">⭐⭐⭐⭐⭐</td></tr>
+      <tr><td>Maria Victoria</td><td><span class="badge badge-low">PP</span></td><td>Filha de Ricardo Barros (ex-ministro) e Cida Borghetti (ex-governadora)</td><td style="text-align:center">⭐⭐⭐⭐⭐</td></tr>
+      <tr><td>Flávia Francischini</td><td><span class="badge badge-low">União</span></td><td>Esposa de Fernando Francischini (cassado). Filho Felipe é deputado federal.</td><td style="text-align:center">⭐⭐⭐⭐</td></tr>
+      <tr><td>Ney Leprevost</td><td><span class="badge badge-low">União</span></td><td>Neto de Ney Leprevost, ex-prefeito de Curitiba (1948). Irmão foi vereador.</td><td style="text-align:center">⭐⭐⭐⭐</td></tr>
+      <tr><td>Mabel Canto</td><td><span class="badge badge-low">PP</span></td><td>Filha do ex-prefeito de Ponta Grossa Jocelito Canto</td><td style="text-align:center">⭐⭐⭐⭐</td></tr>
+      <tr><td>Marcelo Rangel</td><td><span class="badge badge-low">PSD</span></td><td>Irmão do dep. federal Sandro Alex. Candidato ao governo apoiado por Ratinho Jr.</td><td style="text-align:center">⭐⭐⭐⭐</td></tr>
+      <tr><td>Artagão Júnior</td><td><span class="badge badge-low">PSD</span></td><td>Filho de Artagão de Mattos Leão, ex-dep. estadual e conselheiro do TCE</td><td style="text-align:center">⭐⭐⭐</td></tr>
+      <tr><td>Nelson Justus</td><td><span class="badge badge-low">União</span></td><td>Filho de Nelson Justus pai, presidente da ALEP (2003–2007)</td><td style="text-align:center">⭐⭐⭐</td></tr>
+      <tr><td>Cristina Silvestri</td><td><span class="badge badge-low">PP</span></td><td>Esposa de Cezar Silvestri, mãe do ex-prefeito de Guarapuava</td><td style="text-align:center">⭐⭐⭐</td></tr>
+      <tr><td>Adão Litro</td><td><span class="badge badge-low">PSD</span></td><td>Família Litro tem tradição no Sudoeste do PR. Tio do dep. federal Paulo Litro.</td><td style="text-align:center">⭐⭐⭐</td></tr>
+      <tr><td style="color:var(--green);font-weight:600">Dep. José Maurino (candidato)</td><td><span class="badge badge-ok">MDB</span></td><td style="color:var(--green)">Sem herança política. Poder próprio: 43 anos de gestão pública, currículo real.</td><td style="text-align:center;color:var(--green)">— mérito</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+</section>
+
+<!-- ══════════════════════════════════════
+     SEÇÃO 7: AGENDA
+══════════════════════════════════════ -->
+<section class="section" id="agenda">
+
+  <div class="sec-header">
+    <div class="sec-label">calendário estratégico</div>
+    <div class="sec-title">do agora até 4 de outubro</div>
+    <div class="sec-desc">O timing da campanha. Cada fase tem uma missão específica.</div>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:24px">
+    <div>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot gold"></div>
+          <div class="tl-date">junho/2026</div>
+          <div class="tl-title">pré-campanha: alianças e digital</div>
+          <div class="tl-desc">Visitar os 8 prefeitos-alvo. Intensificar redes sociais. Entrevistas em Campo Mourão (Rádio Musical FM, Tribuna do Interior). Crowdfunding via plataforma TSE (aberto desde 15/mai). Nunca pedir voto explicitamente. É regra legal.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot gold"></div>
+          <div class="tl-date">20 DE JUNHO</div>
+          <div class="tl-title">feijoada do Dep. José Maurino</div>
+          <div class="tl-desc">Evento de mobilização popular. Primeiro termômetro real da base. Presença dos coordenadores locais como sinal de força.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-date">18 DE JULHO</div>
+          <div class="tl-title">convenção do MDB</div>
+          <div class="tl-desc">Entre 20 de julho e 5 de agosto conforme calendário TSE. Registro oficial da candidatura. Momento de visibilidade interna no partido.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot green"></div>
+          <div class="tl-date">1 DE AGOSTO</div>
+          <div class="tl-title">lançamento em Campo Mourão</div>
+          <div class="tl-desc">Evento emocional, a base afetiva. Presença de deputados do MDB. Campo Mourão como epicentro simbólico. Transmissão ao vivo nas redes.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot green"></div>
+          <div class="tl-date">8 DE AGOSTO</div>
+          <div class="tl-title">lançamento em Curitiba</div>
+          <div class="tl-desc">Capital e maior colégio eleitoral. Foco em nichos: movimento negro, CUFA, servidores de CT&I. Presença do Prof. Euler e Aloisio Nascimento.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-date">14–15 DE AGOSTO</div>
+          <div class="tl-title">jantares em Londrina/Maringá</div>
+          <div class="tl-desc">Norte do Paraná. Ecossistema de inovação. Professores universitários. Lideranças do movimento negro regional.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-date">28–29 DE AGOSTO</div>
+          <div class="tl-title">Guarapuava, Cascavel e Foz</div>
+          <div class="tl-desc">Centro-sul e oeste. Regiões com coordenadores locais já identificados (Prof. Cleber, Vinícius França, Prof. Eduardo Dechechi).</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot red"></div>
+          <div class="tl-date">setembro: sprint final</div>
+          <div class="tl-title">campanha de rua + digital massivo</div>
+          <div class="tl-desc">Reuniões capilares com lideranças comunitárias. Presença nos municípios dos prefeitos aliados. Tráfego pago concentrado nas últimas 3 semanas.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot red"></div>
+          <div class="tl-date">4 DE OUTUBRO</div>
+          <div class="tl-title">primeiro turno</div>
+          <div class="tl-desc">Meta: 35.000–40.000 votos. Alvo interno do candidato: 50.000.</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <!-- REGRAS LEGAIS -->
+      <div style="background:var(--surface);border:1px solid var(--border);padding:20px;margin-bottom:16px">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--red);margin-bottom:12px">⚖️ Regras Legais Inegociáveis</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-size:12px;color:var(--dim2);padding:8px 12px;border-left:2px solid var(--red);line-height:1.6"><strong style="color:var(--text)">Até 15/ago:</strong> Nunca pedir voto explicitamente. Nunca mencionar número eleitoral em conteúdo pago.</div>
+          <div style="font-size:12px;color:var(--dim2);padding:8px 12px;border-left:2px solid var(--red);line-height:1.6"><strong style="color:var(--text)">Doações:</strong> Só pessoa física (máx. 10% da renda). CNPJ não pode. Crowdfunding só via plataforma TSE.</div>
+          <div style="font-size:12px;color:var(--dim2);padding:8px 12px;border-left:2px solid var(--red);line-height:1.6"><strong style="color:var(--text)">IA em conteúdo:</strong> Deepfake proibido. Conteúdo sintético precisa de rótulo (Res. TSE 23.732/2024).</div>
+          <div style="font-size:12px;color:var(--dim2);padding:8px 12px;border-left:2px solid var(--gold);line-height:1.6"><strong style="color:var(--text)">Dúvida jurídica?</strong> Consultar Dr. Gilmar Cardoso ou Dr. Cristiano Dionísio antes de agir.</div>
+        </div>
+      </div>
+
+      <!-- ORÇAMENTO COMPARADO -->
+      <div style="background:var(--surface);border:1px solid var(--border);padding:20px">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:12px">💰 orçamento · divergência entre os arquivos</div>
+        <div style="font-size:11px;color:var(--red);margin-bottom:10px">⚠️ Os dois documentos têm valores diferentes. Definir o oficial antes de apresentar a doadores.</div>
+        <table style="font-size:11px">
+          <thead><tr><th style="text-align:left;font-size:9px">Item</th><th>PDF</th><th>PPTX</th><th>Δ</th></tr></thead>
+          <tbody>
+            <tr><td>Marketing Digital</td><td>100.000</td><td>100.000</td><td class="green">=</td></tr>
+            <tr><td>Coordenadores</td><td>97.200</td><td>100.000</td><td class="warn">+2.800</td></tr>
+            <tr><td>Mobilização</td><td>129.600</td><td>200.000</td><td class="red">+70.400</td></tr>
+            <tr><td>Material Gráfico</td><td>100.000</td><td>100.000</td><td class="green">=</td></tr>
+            <tr><td>Despesas Gerais</td><td>50.000</td><td>50.000</td><td class="green">=</td></tr>
+            <tr><td>Comitê</td><td>15.000</td><td>—</td><td class="red">-15.000</td></tr>
+            <tr><td>Combustível</td><td>5.000</td><td>25.000</td><td class="red">+20.000</td></tr>
+            <tr><td>Alimentação</td><td>3.000</td><td>25.000</td><td class="red">+22.000</td></tr>
+            <tr style="font-weight:600"><td>TOTAL</td><td class="gold">499.800</td><td class="red">600.000</td><td class="red">+100.200</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+</div><!-- /wrapper -->
+
+<footer class="page-footer">
+  <span>Hodari</span>
+  <span>briefing confidencial · Dep. José Maurino · ALEP 2026</span>
+  <span>Dados: TRE-PR 2024, TSE, ALEP, IPARDES, Gazeta do Povo, Plural.jor.br</span>
+</footer>
+
+<script>
+// ─── DADOS ───────────────────────────────────────────────
+
+const DADOS_VOTOS = [
+  // Litoral
+  {r:"Litoral / Vale do Ribeira", n:"Paranaguá", e:108344, o:"MÁXIMA", v:[1300,2601,5201,8668], orig:1000},
+  {r:"Litoral / Vale do Ribeira", n:"Matinhos", e:34607, o:"MÁXIMA", v:[415,831,1661,2769], orig:0},
+  {r:"Litoral / Vale do Ribeira", n:"Guaratuba", e:31890, o:"ALTA", v:[382,765,1531,2551], orig:0},
+  {r:"Litoral / Vale do Ribeira", n:"Pontal do Paraná", e:22000, o:"ALTA", v:[264,528,1056,1760], orig:0},
+  {r:"Litoral / Vale do Ribeira", n:"Morretes", e:14682, o:"ALTA", v:[176,352,705,1175], orig:0},
+  {r:"Litoral / Vale do Ribeira", n:"Antonina", e:14000, o:"ALTA", v:[168,336,672,1120], orig:0},
+  {r:"Litoral / Vale do Ribeira", n:"Cerro Azul", e:14000, o:"MÉDIA", v:[168,336,672,1120], orig:0},
+  {r:"Litoral / Vale do Ribeira", n:"Bocaiuva do Sul", e:11000, o:"MÉDIA", v:[132,264,528,880], orig:0},
+  // Norte Pioneiro
+  {r:"Norte Pioneiro", n:"Cornélio Procópio", e:35000, o:"ALTA", v:[420,840,1680,2800], orig:0},
+  {r:"Norte Pioneiro", n:"Jacarezinho", e:28000, o:"ALTA", v:[336,672,1344,2240], orig:0},
+  {r:"Norte Pioneiro", n:"Bandeirantes", e:23000, o:"ALTA", v:[276,552,1104,1840], orig:0},
+  {r:"Norte Pioneiro", n:"Ibaiti", e:20000, o:"ALTA", v:[240,480,960,1600], orig:0},
+  {r:"Norte Pioneiro", n:"Wenceslau Braz", e:13000, o:"ALTA", v:[156,312,624,1040], orig:0},
+  {r:"Norte Pioneiro", n:"Carlópolis", e:10800, o:"MÉDIA", v:[129,259,518,864], orig:0},
+  {r:"Norte Pioneiro", n:"Joaquim Távora", e:10500, o:"MÉDIA", v:[126,252,504,840], orig:0},
+  // Centro-sul
+  {r:"Centro-Sul", n:"Irati", e:40000, o:"ALTA", v:[480,960,1920,3200], orig:0},
+  {r:"Centro-Sul", n:"União da Vitória", e:33000, o:"ALTA", v:[396,792,1584,2640], orig:0},
+  {r:"Centro-Sul", n:"Prudentópolis", e:32000, o:"ALTA", v:[384,768,1536,2560], orig:0},
+  {r:"Centro-Sul", n:"Ivaiporã", e:22000, o:"ALTA", v:[264,528,1056,1760], orig:0},
+  {r:"Centro-Sul", n:"Palmas", e:22000, o:"ALTA", v:[264,528,1056,1760], orig:0},
+  {r:"Centro-Sul", n:"Pitanga", e:20000, o:"ALTA", v:[240,480,960,1600], orig:0},
+  // Campos Gerais
+  {r:"Campos Gerais Interior", n:"Jaguariaíva", e:22000, o:"ALTA", v:[264,528,1056,1760], orig:0},
+  {r:"Campos Gerais Interior", n:"Arapoti", e:18000, o:"ALTA", v:[216,432,864,1440], orig:0},
+  {r:"Campos Gerais Interior", n:"Ortigueira", e:14000, o:"MÉDIA", v:[168,336,672,1120], orig:0},
+  {r:"Campos Gerais Interior", n:"Sengés", e:13500, o:"MÉDIA", v:[162,324,648,1080], orig:0},
+  // Base já no deck (mantidas)
+  {r:"Base Original do Deck", n:"Curitiba", e:1296196, o:"BASE", v:[3000,4000,5000,6000], orig:20000},
+  {r:"Base Original do Deck", n:"Campo Mourão / COMCAM", e:62603, o:"BASE", v:[8000,10000,12000,14500], orig:14500},
+  {r:"Base Original do Deck", n:"Maringá", e:264385, o:"BASE", v:[800,1200,1500,2000], orig:1500},
+  {r:"Base Original do Deck", n:"Londrina", e:358763, o:"BASE", v:[600,800,1000,1400], orig:1000},
+  {r:"Base Original do Deck", n:"Guarapuava", e:134000, o:"BASE", v:[500,700,1000,1400], orig:1000},
+  {r:"Base Original do Deck", n:"Cascavel", e:210614, o:"BASE", v:[400,550,700,900], orig:700},
+  {r:"Base Original do Deck", n:"Foz do Iguaçu", e:170763, o:"BASE", v:[400,550,700,900], orig:700},
+  {r:"Base Original do Deck", n:"Araruna", e:11000, o:"BASE", v:[300,400,500,700], orig:500},
+];
+
+const cenarios = ["Sem aliança (1,5%)", "1 Vereador (3%)", "Prefeito aliado (6%) ★", "Estruturado (10%)"];
+let cenAtivo = 2;
+
+function fmt(n) { return n.toLocaleString('pt-BR'); }
+function badge(o) {
+  if(o==="MÁXIMA") return '<span class="badge badge-max">🔴 MÁXIMA</span>';
+  if(o==="ALTA")   return '<span class="badge badge-high">🟡 ALTA</span>';
+  if(o==="MÉDIA")  return '<span class="badge badge-med">🔵 MÉDIA</span>';
+  if(o==="BASE")   return '<span class="badge badge-ok">🟢 BASE</span>';
+  return '<span class="badge badge-low">⚪ BAIXA</span>';
+}
+
+function setCen(idx) {
+  cenAtivo = idx;
+  document.querySelectorAll('.stab').forEach((b,i) => b.classList.toggle('active', i===idx));
+  renderVotos();
+}
+
+function renderVotos() {
+  const tbody = document.getElementById('votos-tbody');
+  if(!tbody) return;
+  let html = '', reg = '', i = 1;
+  let total = 0;
+  DADOS_VOTOS.forEach(d => {
+    if(d.r !== reg) {
+      reg = d.r;
+      html += `<tr class="tbl-group"><td colspan="10">📍 ${reg}</td></tr>`;
+    }
+    const v = d.v[cenAtivo];
+    total += v;
+    const delta = v - d.orig;
+    const deltaStr = d.orig === 0
+      ? '<span style="color:var(--dim)">+novo</span>'
+      : delta >= 0
+        ? `<span class="green">+${fmt(delta)}</span>`
+        : `<span class="red">${fmt(delta)}</span>`;
+    const maxV = Math.max(...d.v);
+    const pct = Math.round(v/maxV*100);
+    html += `<tr>
+      <td style="color:var(--dim);font-family:'DM Mono',monospace;font-size:10px">${i++}</td>
+      <td>${d.n}</td>
+      <td>${badge(d.o)}</td>
+      <td style="text-align:right">${fmt(d.e)}</td>
+      <td>${fmt(d.v[0])}</td>
+      <td>${fmt(d.v[1])}</td>
+      <td class="${cenAtivo===2?'gold':''}">${fmt(d.v[2])}</td>
+      <td>${fmt(d.v[3])}</td>
+      <td style="text-align:right;color:var(--dim2)">${d.orig>0?fmt(d.orig):'—'}</td>
+      <td>${deltaStr}</td>
+    </tr>`;
+  });
+  tbody.innerHTML = html;
+  // atualizar totalizador
+  const alvo = 35000;
+  const pct = Math.min(total/alvo*100, 100);
+  document.getElementById('total-num').textContent = fmt(total);
+  document.getElementById('total-num').className = 'total-num ' + (total >= alvo ? 'ok' : 'warn');
+  document.getElementById('pct-label').textContent = Math.round(total/alvo*100)+'% do alvo';
+  document.getElementById('total-bar').style.width = pct+'%';
+  document.getElementById('total-bar').className = 'total-bar-fill ' + (total >= alvo ? 'prog-green' : 'prog-gold');
+}
+
+// ─── MUNICÍPIOS ÓRFÃOS ───────────────────────────────────
+
+const REGIOES = [
+  {
+    nome: "Litoral & Vale do Ribeira",
+    nivel: "MÁXIMA",
+    insight: "Paranaguá é o maior vácuo político do estado. 108k eleitores, maior porto da América Latina, 20 candidatos em 2022 e zero eleitos. Prefeito Adriano Ramos (Republicanos) ganhou com 72% e não tem aliado na ALEP.",
+    muns: ["Paranaguá","Matinhos","Guaratuba","Pontal do Paraná","Morretes","Antonina","Cerro Azul","Adrianópolis","Guaraqueçaba","Bocaiuva do Sul","Tunas do Paraná","Doutor Ulysses"]
+  },
+  {
+    nome: "Norte Pioneiro",
+    nivel: "ALTA",
+    insight: "17 municípios sem padrinho consolidado. Região histórica, eleitorado fiel e previsível. Sem renovação política expressiva há décadas. Quem chegar primeiro planta raiz.",
+    muns: ["Jacarezinho","Cornélio Procópio","Bandeirantes","Ibaiti","Wenceslau Braz","Carlópolis","Joaquim Távora","Quatiguá","Santa Mariana","Uraí","Ribeirão do Pinhal","Tomazina","São José da Boa Vista","Abatiá","Leópolis","Rancho Alegre","Nova América da Colônia"]
+  },
+  {
+    nome: "Centro-Sul (Palmas / Pitanga / Irati)",
+    nivel: "ALTA",
+    insight: "IDH abaixo da média estadual, pouco investimento público, alto índice de retenção de voto por gratidão. Custo de campanha significativamente menor que Curitiba. Candidato que resolve um problema pontual colhe votos por 2 eleições.",
+    muns: ["Irati","Prudentópolis","União da Vitória","Ivaiporã","Palmas","Pitanga","Cruz Machado","Rebouças","Mallet","Bituruna","General Carneiro","Manoel Ribas","Roncador","Grandes Rios","Luiziana","Mamborê","Paula Freitas","Paulo Frontin","Porto Vitória"]
+  },
+  {
+    nome: "Campos Gerais Interior",
+    nivel: "MÉDIA",
+    insight: "Ponta Grossa tem deputado (Marcelo Rangel), mas municípios ao norte ficam sem cobertura real. Jaguariaíva e Arapoti têm potencial industrial não explorado politicamente.",
+    muns: ["Jaguariaíva","Arapoti","Ortigueira","Sengés","Reserva","Cândido de Abreu","Imbaú","Ventania"]
+  },
+  {
+    nome: "Noroeste Profundo",
+    nivel: "MÉDIA",
+    insight: "Alta dispersão demográfica. Custo logístico elevado. Funciona melhor como rota de votos somados, não como base territorial. Visitar em bloco junto com agenda de Maringá.",
+    muns: ["Nova Londrina","Querência do Norte","Paraíso do Norte","Cruzeiro do Sul","Tamboara","Amaporã","Santa Cruz de Monte Castelo","Marilena","Guairaçá","Jardim Olinda","Nova Aliança do Ivaí","Santa Isabel do Ivaí","Porto Rico","São Pedro do Paraná","Planaltina do Paraná","Paranapoema","Itaúna do Sul"]
+  }
+];
+
+function renderRegioes() {
+  const c = document.getElementById('regioes-container');
+  if(!c) return;
+  c.innerHTML = REGIOES.map(r => {
+    const bcls = r.nivel==='MÁXIMA'?'badge-max':r.nivel==='ALTA'?'badge-high':'badge-med';
+    const tags = r.muns.map(m => `<span class="badge badge-low" style="margin:2px;padding:3px 8px">${m}</span>`).join('');
+    return `<div class="card" style="margin-bottom:16px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
+        <div style="font-size:16px;font-weight:600;color:var(--white)">${r.nome}</div>
+        <span class="badge ${bcls}">${r.nivel}</span>
+      </div>
+      <div style="font-size:12px;color:var(--dim2);line-height:1.6;margin-bottom:12px;border-left:2px solid var(--border2);padding-left:12px">${r.insight}</div>
+      <div>${tags}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--dim);margin-top:10px">${r.muns.length} municípios mapeados</div>
+    </div>`;
+  }).join('');
+}
+
+// ─── PREFEITOS-ALVO ───────────────────────────────────────
+
+const PREFEITOS = [
+  {
+    rank:1, cidade:"Paranaguá", nome:"Adriano Ramos", partido:"Republicanos",
+    eleito:"72,30% dos votos (1º turno)", votos_pref:5201,
+    tipo:"Sem Representação",
+    compat:"Alta. Republicanos é aliado natural do MDB no interior",
+    insight:"Paranaguá não elegeu nenhum deputado local em 2022. Cidade com 108k eleitores e zero representação na ALEP. Cada demanda que o prefeito leva a Curitiba depende de um político de outra cidade que não deve nada a Paranaguá.",
+    script:"Prefeito Adriano, Paranaguá é o maior porto do Brasil e não tem voz em Curitiba. Em 2022, 20 candidatos desta cidade concorreram e nenhum se elegeu. Quero ser o deputado de Paranaguá. O que o senhor precisa que chegue na Assembleia?"
+  },
+  {
+    rank:2, cidade:"Irati", nome:"Emiliano Gomes", partido:"PSD",
+    eleito:"44,95% (venceu por 2,6 pontos)", votos_pref:1920,
+    tipo:"Vencedor Apertado",
+    compat:"Média. PSD é o partido do governador, mas Emiliano tem mandato frágil e precisa de alianças",
+    insight:"Ganhou com menos de 45% dos votos em disputa acirrada. Não tem mandato consolidado. Prefeito em situação apertada precisa de aliado na ALEP para garantir emendas e viabilidade política, independente de partido.",
+    script:"Prefeito Emiliano, o senhor venceu uma eleição difícil e tem muito a entregar para Irati nos próximos 4 anos. Para isso precisa de um aliado em Curitiba que trabalhe para a sua cidade. Sou do MDB, partido que está lançando Greca ao governo. Vamos construir juntos a representação que Irati merece."
+  },
+  {
+    rank:3, cidade:"Cornélio Procópio", nome:"Raphael Sampaio", partido:"PP",
+    eleito:"52,32% (venceu contra PSD com 34%)", votos_pref:1680,
+    tipo:"Anti-PSD",
+    compat:"Alta. PP é aliado histórico do MDB. Raphael derrotou o PSD local.",
+    insight:"Venceu claramente contra o grupo do PSD local. Há tensão política documentada. Um deputado do MDB é perfeito: não é rival do PP, nem subserviente ao PSD. É o aliado neutro que o prefeito precisa na ALEP.",
+    script:"Prefeito Raphael, o senhor derrotou o PSD local. Sabe que vai precisar de um deputado que não deva nada ao grupo adversário. Sou do MDB, independente, e vou trabalhar pela sua agenda em Curitiba sem conflito com a sua base."
+  },
+  {
+    rank:4, cidade:"Jaguariaíva", nome:"A confirmar", partido:"A verificar",
+    eleito:"polo industrial, Campos Gerais norte", votos_pref:1056,
+    tipo:"Sem Representação",
+    compat:"A verificar partido após confirmação do resultado",
+    insight:"22.000 eleitores, polo industrial (papel/celulose), Campos Gerais norte. Sem deputado local desde sempre. Dois candidatos de Jaguariaíva tentaram em 2022, nenhum se elegeu.",
+    script:"Prefeito, Jaguariaíva tem indústria, tem potencial, mas não tem voz em Curitiba. Nenhum deputado eleito tem base aqui. Quero ser o primeiro a mudar isso, e quero que seja junto com a sua liderança."
+  },
+  {
+    rank:5, cidade:"União da Vitória", nome:"A confirmar", partido:"A verificar",
+    eleito:"33.000 eleitores. Fronteira SC.", votos_pref:1584,
+    tipo:"Sem Representação",
+    compat:"A verificar",
+    insight:"Cidade de fronteira com Santa Catarina, sem representação estadual local. Efeito de 'dois lados': candidatos paranaenses não focam lá, candidatos catarinenses não têm jurisdição. Vácuo duplo.",
+    script:"Prefeito, União da Vitória está na fronteira, por isso fica no meio do caminho de todo mundo e no foco de ninguém. Quero ser o deputado que olha para essa região com atenção que ela merece."
+  },
+  {
+    rank:6, cidade:"Prudentópolis", nome:"A confirmar", partido:"A verificar",
+    eleito:"49.000 hab. Maior município em área do PR.", votos_pref:1536,
+    tipo:"Sem Representação",
+    compat:"A verificar",
+    insight:"Maior município em extensão territorial do PR. Fortíssima presença ucraniana. Comunidade religiosa organizada. Sem representação estadual local. A comunidade ucraniana vota em bloco quando se sente representada.",
+    script:"Prefeito, Prudentópolis é o maior município em área do Paraná e nunca teve um deputado estadual com base real aqui. Tenho profundo respeito pela cultura desta comunidade e quero ser esse representante."
+  },
+  {
+    rank:7, cidade:"Cornélio Procópio → Ibaiti", nome:"Cluster Norte Pioneiro", partido:"Múltiplos",
+    eleito:"Cluster de 5 cidades: ~100k eleitores", votos_pref:3000,
+    tipo:"Cluster Estratégico",
+    compat:"Alta. Região sem padrinho político consolidado há décadas",
+    insight:"Abordar os prefeitos de Ibaiti, Wenceslau Braz, Carlópolis e Joaquim Távora em uma só rodada. Região compacta geograficamente, uma visita cobre 4 municípios. Total projetado com prefeitos aliados: ~3.000 votos.",
+    script:"Prefeito, estou fazendo uma rodada pelo Norte Pioneiro porque essa região tem um potencial enorme e nenhum deputado que trabalhe por ela em Curitiba. Quero ser esse deputado, e quero que o senhor faça parte dessa história."
+  },
+  {
+    rank:8, cidade:"Matinhos + Guaratuba", nome:"Cluster Litoral Sul", partido:"Múltiplos",
+    eleito:"~66k eleitores combinados", votos_pref:3192,
+    tipo:"Cluster Estratégico",
+    compat:"complementar a Paranaguá, cobre o litoral completo",
+    insight:"Com aliança em Paranaguá + cluster Matinhos/Guaratuba, o Dep. José Maurino cobre todo o litoral paranaense. Nenhum outro candidato terá essa capilaridade regional. O 'Deputado do Litoral' pode ser um posicionamento forte.",
+    script:"Prefeito, junto com Paranaguá, quero que o litoral do Paraná finalmente tenha representação real na Assembleia. Vou ser o deputado que aparece aqui, não só na época de eleição."
+  }
+];
+
+function renderPrefeitos() {
+  const c = document.getElementById('prefeitos-container');
+  if(!c) return;
+  c.innerHTML = '';
+  const grid = document.createElement('div');
+  grid.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px';
+  PREFEITOS.forEach(p => {
+    const div = document.createElement('div');
+    div.className = 'pref-card';
+    div.innerHTML = `
+      <div class="pref-rank">${p.rank.toString().padStart(2,'0')}</div>
+      <div class="pref-tags">
+        <span class="badge badge-${p.tipo.includes('Máx')||p.tipo.includes('Max')?'max':p.tipo.includes('Alta')||p.tipo.includes('Anti')||p.tipo.includes('Sem')?'high':'med'}">${p.tipo}</span>
+        <span class="badge badge-ok">${p.partido}</span>
+      </div>
+      <div class="pref-cidade">${p.cidade}</div>
+      <div class="pref-nome">${p.nome}</div>
+      <div style="font-size:11px;color:var(--dim2);margin-bottom:8px">${p.eleito}</div>
+      <div class="pref-votos">${fmt(p.votos_pref)}</div>
+      <div class="pref-voto-label">votos estimados (c/ prefeito aliado)</div>
+      <div class="mini-bar"><div class="mini-fill" style="width:${Math.min(p.votos_pref/5201*100,100)}%"></div></div>
+      <div class="pref-insight"><strong>Por que ele se interessa:</strong> ${p.insight}</div>
+      <div class="pref-tags" style="margin-top:10px"><span style="font-family:'DM Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:1px">COMPAT: ${p.compat}</span></div>
+      <div class="script-box">💬 Script: "${p.script}"</div>
+    `;
+    grid.appendChild(div);
+  });
+  c.appendChild(grid);
+  if(window.innerWidth < 700) grid.style.gridTemplateColumns = '1fr';
+}
+
+// ─── NAVEGAÇÃO ───────────────────────────────────────────
+
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.nav-link').forEach(b => {
+    if(b.getAttribute('onclick').includes(`'${id}'`)) b.classList.add('active');
+  });
+  window.scrollTo(0, 0);
+}
+
+// ─── INIT ────────────────────────────────────────────────
+
+document.addEventListener('DOMContentLoaded', () => {
+  renderVotos();
+  renderRegioes();
+  renderPrefeitos();
+});
+</script>
+</body>
+</html>
