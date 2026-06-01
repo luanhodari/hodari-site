@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Deputado Maurino — Hodari</title>
+  <link rel="stylesheet" href="../cliente.css" />
+</head>
+<body>
+  <header class="topo">
+    <a href="/" class="topo-logo"><img src="../../logo.png" alt="Hodari" /></a>
+    <div class="topo-cliente">
+      <div class="cliente-avatar">DM</div>
+      <div>
+        <p class="cliente-nome-topo">Deputado Maurino</p>
+        <p class="cliente-tag-topo">Campanha Política 2026</p>
+      </div>
+    </div>
+  </header>
+  <div class="hero-cliente">
+    <div class="badge">Campanha Ativa</div>
+    <h1 class="hero-titulo">Olá, Maurino.</h1>
+    <p class="hero-sub">Aqui você acompanha tudo sobre a sua campanha. Resultados, estratégia e materiais em um só lugar.</p>
+  </div>
+  <nav class="abas">
+    <button class="aba ativa" onclick="trocarAba(this,'resultados')">Resultados</button>
+    <button class="aba" onclick="trocarAba(this,'campanha')">Campanha</button>
+    <button class="aba" onclick="trocarAba(this,'estrategia')">Estratégia</button>
+    <button class="aba" onclick="trocarAba(this,'materiais')">Materiais</button>
+  </nav>
+  <main class="conteudo">
+    <div class="aba-conteudo ativa" id="aba-resultados">
+      <div class="metricas-grid">
+        <div class="metrica-card"><p class="metrica-label">Alcance total</p><p class="metrica-valor">0</p><p class="metrica-var neutro">Pessoas alcançadas</p></div>
+        <div class="metrica-card"><p class="metrica-label">Impressões</p><p class="metrica-valor">0</p><p class="metrica-var neutro">Exibições dos anúncios</p></div>
+        <div class="metrica-card"><p class="metrica-label">Cliques</p><p class="metrica-valor">0</p><p class="metrica-var neutro">Engajamentos</p></div>
+        <div class="metrica-card"><p class="metrica-label">Custo por clique</p><p class="metrica-valor">R$0</p><p class="metrica-var neutro">CPC médio</p></div>
+      </div>
+      <div class="bloco">
+        <h2 class="bloco-titulo">Análise do período <span class="tag">Atualizado semanalmente</span></h2>
+        <p>Os dados aparecem aqui após o início das campanhas. Atualizo este painel toda semana com os números reais da sua conta de anúncios.</p>
+      </div>
+    </div>
+    <div class="aba-conteudo" id="aba-campanha">
+      <div class="bloco">
+        <h2 class="bloco-titulo">Plano de Campanha</h2>
+        <p>O planejamento completo da campanha vai estar aqui, incluindo públicos, criativos aprovados, cronograma de veiculação e orçamento por período.</p>
+      </div>
+      <div class="bloco">
+        <h2 class="bloco-titulo">Status das ações</h2>
+        <div class="status-lista">
+          <div class="status-item"><span class="status-nome">Identidade visual da campanha</span><span class="status-badge em-breve">Em produção</span></div>
+          <div class="status-item"><span class="status-nome">Instagram da campanha</span><span class="status-badge ativo">Ativo</span></div>
+          <div class="status-item"><span class="status-nome">Site da campanha</span><span class="status-badge pendente">Pendente</span></div>
+          <div class="status-item"><span class="status-nome">Meta Ads</span><span class="status-badge em-breve">Em breve</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="aba-conteudo" id="aba-estrategia">
+      <div class="bloco">
+        <h2 class="bloco-titulo">Estratégia de Campanha</h2>
+        <p>O documento de estratégia vai estar aqui, com posicionamento, mensagens-chave, linha editorial e definição de públicos para cada fase da campanha.</p>
+        <p>Em construção. Entro em contato assim que o documento estiver pronto.</p>
+      </div>
+    </div>
+    <div class="aba-conteudo" id="aba-materiais">
+      <div class="bloco">
+        <h2 class="bloco-titulo">Materiais da Campanha</h2>
+        <ul>
+          <li>Artes aprovadas (a adicionar)</li>
+          <li>Vídeos da campanha (a adicionar)</li>
+          <li>Relatórios em PDF (a adicionar)</li>
+          <li>Fotos oficiais (a adicionar)</li>
+        </ul>
+      </div>
+    </div>
+  </main>
+  <footer class="rodape-cliente">
+    <span class="frase-rodape">terra seca nunca mais.</span>
+    <p>Atualizado pela <a href="/">Hodari Marketing Estratégico</a></p>
+  </footer>
+  <script>
+    function trocarAba(btn,id){document.querySelectorAll('.aba').forEach(a=>a.classList.remove('ativa'));document.querySelectorAll('.aba-conteudo').forEach(c=>c.classList.remove('ativa'));btn.classList.add('ativa');document.getElementById('aba-'+id).classList.add('ativa');}
+  </script>
+</body>
+</html>
