@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="pt-BR" translate="no">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="google" content="notranslate" />
+  <meta name="description" content="Hodari — O departamento de marketing da sua empresa." />
+  <title>Hodari Marketing Estratégico</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+</head>
+<body class="notranslate">
+
+  <nav id="nav">
+    <a href="/" class="nav-logo"><img src="logo.png" alt="Hodari" /></a>
+    <div class="nav-direita">
+      <span class="nav-frase">terra seca nunca mais.</span>
+      <a href="/clientes" class="nav-cliente">Área do Cliente</a>
+    </div>
+  </nav>
+
+  <!-- HERO COM WIZARD + ELEMENTOS FLUTUANTES -->
+  <section id="wizard">
+
+    <!-- Cards flutuantes decorativos no fundo -->
+    <div class="float-cards" id="floatCards">
+      <div class="float-card fc-1" data-speed="2">
+        <div class="fc-icon">📈</div>
+        <div class="fc-bar"><span style="width:78%"></span></div>
+        <div class="fc-bar"><span style="width:54%"></span></div>
+      </div>
+      <div class="float-card fc-2" data-speed="-3">
+        <div class="fc-metric">+247%</div>
+        <div class="fc-label">alcance</div>
+      </div>
+      <div class="float-card fc-3" data-speed="4">
+        <div class="fc-icon">🎯</div>
+        <div class="fc-text">Campanha ativa</div>
+      </div>
+      <div class="float-card fc-4" data-speed="-2">
+        <div class="fc-metric">R$ 4,20</div>
+        <div class="fc-label">custo por lead</div>
+      </div>
+      <div class="float-card fc-5" data-speed="3">
+        <div class="fc-dot"></div>
+        <div class="fc-text">126 leads</div>
+      </div>
+      <div class="float-card fc-6" data-speed="-4">
+        <div class="fc-stars">★★★★★</div>
+        <div class="fc-label">4.9 no Google</div>
+      </div>
+    </div>
+
+    <div class="wizard-progress">
+      <div class="progress-dot ativo"></div>
+      <div class="progress-dot"></div>
+      <div class="progress-dot"></div>
+      <div class="progress-dot"></div>
+    </div>
+
+    <!-- Tela de entrada -->
+    <div class="wizard-etapa ativa" data-etapa="0" id="etapa-entrada">
+      <div class="badge-topo">
+        <span class="badge-dot"></span>
+        Vagas abertas para novos clientes
+      </div>
+      <p class="wizard-kicker">Prezado empresário.</p>
+      <h1 class="wizard-pergunta wizard-pergunta--entrada">
+        Um departamento de marketing inteiro na sua empresa. 7 dias por semana, sem folha de pagamento.
+      </h1>
+      <p class="wizard-sub">Resultado real, estratégia de verdade e alguém do seu lado para fazer acontecer.</p>
+      <button class="btn-comecar" onclick="iniciarWizard()">
+        <span>Quero isso</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+
+    <!-- Etapa 1 -->
+    <div class="wizard-etapa" data-etapa="1" data-campo="desafio">
+      <p class="wizard-kicker">Vamos começar</p>
+      <h1 class="wizard-pergunta">Qual é o seu maior desafio agora?</h1>
+      <div class="wizard-opcoes">
+        <button class="wizard-opcao" data-valor="desconhecido"><span>😶 Pouca gente me conhece</span></button>
+        <button class="wizard-opcao" data-valor="crescer"><span>📈 Quero vender mais</span></button>
+        <button class="wizard-opcao" data-valor="concorrencia"><span>⚔️ Perco espaço para a concorrência</span></button>
+        <button class="wizard-opcao" data-valor="perdido"><span>🧭 Não sei por onde começar</span></button>
+      </div>
+    </div>
+
+    <!-- Etapa 2 -->
+    <div class="wizard-etapa" data-etapa="2" data-campo="tipo_negocio">
+      <p class="wizard-kicker">Sobre o seu negócio</p>
+      <h1 class="wizard-pergunta">Qual é o seu segmento?</h1>
+      <div class="wizard-opcoes">
+        <button class="wizard-opcao" data-valor="servicos"><span>🤝 Prestação de serviços</span></button>
+        <button class="wizard-opcao" data-valor="industria"><span>🏭 Indústria</span></button>
+        <button class="wizard-opcao" data-valor="beleza"><span>💅 Beleza e estética</span></button>
+        <button class="wizard-opcao" data-valor="alimentacao"><span>🍕 Alimentação</span></button>
+        <button class="wizard-opcao" data-valor="comercio"><span>🛍️ Comércio</span></button>
+        <button class="wizard-opcao" data-valor="outro"><span>✦ Outro</span></button>
+      </div>
+    </div>
+
+    <!-- Etapa 3 -->
+    <div class="wizard-etapa" data-etapa="3" data-campo="tamanho">
+      <p class="wizard-kicker">Só para entender melhor</p>
+      <h1 class="wizard-pergunta">Quantas pessoas trabalham no seu negócio?</h1>
+      <div class="wizard-opcoes wizard-opcoes--4">
+        <button class="wizard-opcao" data-valor="so_eu"><span>Só eu</span></button>
+        <button class="wizard-opcao" data-valor="2_5"><span>2 a 5</span></button>
+        <button class="wizard-opcao" data-valor="6_20"><span>6 a 20</span></button>
+        <button class="wizard-opcao" data-valor="mais_20"><span>Mais de 20</span></button>
+      </div>
+    </div>
+
+    <!-- Etapa 4 -->
+    <div class="wizard-etapa" data-etapa="4">
+      <p class="wizard-kicker">Última etapa, prometo</p>
+      <h1 class="wizard-pergunta">Me fala quem você é.</h1>
+      <div class="wizard-campos">
+        <div class="campo-wrapper">
+          <label for="nome">Seu nome</label>
+          <input id="nome" type="text" data-campo="nome" placeholder="João Silva" required />
+        </div>
+        <div class="campo-wrapper">
+          <label for="whatsapp">WhatsApp</label>
+          <input id="whatsapp" type="tel" data-campo="whatsapp" placeholder="(41) 99999-9999" required />
+        </div>
+        <div class="campo-wrapper">
+          <label for="negocio">Nome do negócio</label>
+          <input id="negocio" type="text" data-campo="negocio" placeholder="Studio XYZ" required />
+        </div>
+        <div class="campo-wrapper">
+          <label for="cidade">Cidade</label>
+          <input id="cidade" type="text" data-campo="cidade" placeholder="Curitiba" required />
+        </div>
+      </div>
+      <div class="wizard-nav">
+        <button class="btn-voltar">Voltar</button>
+        <button class="btn-proximo">Enviar</button>
+      </div>
+    </div>
+
+    <!-- Tela final -->
+    <div class="wizard-final">
+      <div class="final-icone">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 6L9 17l-5-5"/></svg>
+      </div>
+      <h2 class="final-titulo">Oi, <span class="final-nome"></span></h2>
+      <p class="final-texto">Recebi tudo aqui. Vou te chamar no WhatsApp em até 24h com uma análise do seu negócio, sem enrolação.</p>
+      <a href="#" class="btn-whatsapp" id="btn-final-wpp" target="_blank" rel="noopener">Falar agora no WhatsApp</a>
+      <a href="#servicos" class="final-link">Enquanto isso, conheça a Hodari</a>
+    </div>
+
+    <!-- Indicador de scroll -->
+    <div class="scroll-hint">
+      <span>role para baixo</span>
+      <div class="scroll-line"></div>
+    </div>
+
+  </section>
+
+  <!-- SERVIÇOS -->
+  <section id="servicos">
+    <div class="servicos-topo reveal">
+      <div>
+        <span class="secao-label">O que fazemos</span>
+        <h2 class="secao-titulo">Tudo que o seu negócio precisa para crescer.</h2>
+      </div>
+      <span class="servicos-frase">terra seca nunca mais.</span>
+    </div>
+
+    <div class="servicos-grid">
+      <div class="servico-card servico-card--destaque reveal" data-tilt>
+        <div class="servico-card-topo">
+          <div class="servico-icone"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+          <span class="servico-num-card">01</span>
+        </div>
+        <div>
+          <p class="servico-card-nome">Tráfego Pago</p>
+          <p class="servico-card-desc">Meta Ads e TikTok Ads com estratégia real. Cada real investido tem um destino pensado para gerar resultado, não só cliques.</p>
+        </div>
+      </div>
+
+      <div class="servico-card reveal" data-tilt>
+        <div class="servico-card-topo">
+          <div class="servico-icone"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div>
+          <span class="servico-num-card">02</span>
+        </div>
+        <div>
+          <p class="servico-card-nome">Google Meu Negócio</p>
+          <p class="servico-card-desc">No topo do Maps quando o cliente estiver procurando.</p>
+        </div>
+      </div>
+
+      <div class="servico-card reveal" data-tilt>
+        <div class="servico-card-topo">
+          <div class="servico-icone"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
+          <span class="servico-num-card">03</span>
+        </div>
+        <div>
+          <p class="servico-card-nome">Criação de Sites</p>
+          <p class="servico-card-desc">Presença digital profissional, rápida e sem complicação.</p>
+        </div>
+      </div>
+
+      <div class="servico-card reveal" data-tilt>
+        <div class="servico-card-topo">
+          <div class="servico-icone"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 20V10M12 20V4M6 20v-6"/></svg></div>
+          <span class="servico-num-card">04</span>
+        </div>
+        <div>
+          <p class="servico-card-nome">Social Media</p>
+          <p class="servico-card-desc">Conteúdo estratégico para quem quer mais do que curtidas.</p>
+        </div>
+      </div>
+
+      <div class="servico-card reveal" data-tilt>
+        <div class="servico-card-topo">
+          <div class="servico-icone"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg></div>
+          <span class="servico-num-card">05</span>
+        </div>
+        <div>
+          <p class="servico-card-nome">Consultoria</p>
+          <p class="servico-card-desc">Clareza sobre o que fazer, por onde começar e o que parar de fazer.</p>
+        </div>
+      </div>
+
+      <div class="servico-card reveal" data-tilt>
+        <div class="servico-card-topo">
+          <div class="servico-icone"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+          <span class="servico-num-card">06</span>
+        </div>
+        <div>
+          <p class="servico-card-nome">Automação no WhatsApp</p>
+          <p class="servico-card-desc">Atendimento que funciona mesmo quando você não está disponível.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA FINAL -->
+  <section id="cta-final">
+    <div class="cta-inner reveal">
+      <h2 class="cta-titulo">Pronto para a sua empresa crescer?</h2>
+      <p class="cta-sub">Sem compromisso. Comece respondendo algumas perguntas rápidas.</p>
+      <a href="#wizard" class="btn-comecar btn-comecar--claro">
+        <span>Começar agora</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-logo"><img src="logo.png" alt="Hodari" /></div>
+    <div class="footer-centro">
+      <span class="footer-frase">terra seca nunca mais.</span>
+      <p class="footer-copy">2025 Hodari Marketing Estratégico. Curitiba, PR</p>
+    </div>
+    <div class="footer-links">
+      <a href="#" class="footer-link" id="footer-wpp">WhatsApp</a>
+      <a href="#" class="footer-link">Instagram</a>
+      <a href="/clientes" class="footer-link">Área do Cliente</a>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const msg = encodeURIComponent("Oi Luan! Vi o site da Hodari e quero saber mais.");
+      const link = `https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`;
+      document.getElementById("footer-wpp").href = link;
+    });
+  </script>
+</body>
+</html>
