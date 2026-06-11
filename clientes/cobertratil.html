@@ -1,0 +1,3495 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portal do Cliente — Cobertrátil | Hodari</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-primary:    #0A0A1A;
+  --bg-card:       #12122A;
+  --bg-card-hover: #161630;
+  --bg-sidebar:    #0D0D20;
+  --border:        #2D2D5E;
+  --border-light:  #3A3A6A;
+  --accent-purple: #7B2FFF;
+  --accent-blue:   #4F8EF7;
+  --accent-green:  #00D4A0;
+  --accent-yellow: #F5C542;
+  --accent-red:    #FF4F6A;
+  --text-primary:  #F0F0FF;
+  --text-secondary:#8888AA;
+  --text-muted:    #5A5A7A;
+  --glow-purple:   rgba(123,47,255,0.25);
+  --glow-blue:     rgba(79,142,247,0.20);
+  --glow-green:    rgba(0,212,160,0.20);
+  --font-head:     'Plus Jakarta Sans', sans-serif;
+  --font-body:     'DM Sans', sans-serif;
+  --sidebar-w:     240px;
+  --topbar-h:      64px;
+  --radius:        12px;
+  --radius-sm:     8px;
+  --radius-lg:     16px;
+  --transition:    0.22s cubic-bezier(0.4,0,0.2,1);
+}
+
+html { font-size: 16px; scroll-behavior: smooth; }
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  min-height: 100vh;
+  overflow-x: hidden;
+  line-height: 1.5;
+}
+
+/* Noise overlay */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.6;
+}
+
+/* Ambient glow blobs */
+body::after {
+  content: '';
+  position: fixed;
+  top: -200px; left: -100px;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(123,47,255,0.08) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ============================================================
+   SCROLLBAR
+   ============================================================ */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-primary); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border-light); }
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+.sidebar {
+  width: var(--sidebar-w);
+  background: var(--bg-sidebar);
+  border-right: none;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  z-index: 100;
+  transition: transform var(--transition);
+  overflow: hidden;
+}
+
+
+.sidebar-logo {
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.sidebar-logo img {
+  height: 32px;
+  filter: invert(1) brightness(2);
+  display: block;
+}
+
+.sidebar-logo-fallback {
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: 18px;
+  letter-spacing: -0.5px;
+  background: linear-gradient(135deg, #fff 0%, var(--accent-purple) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.sidebar-section {
+  padding: 20px 12px 0;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.sidebar-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 0 8px;
+  margin-bottom: 6px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: all var(--transition);
+  margin-bottom: 2px;
+  position: relative;
+  user-select: none;
+  border: 1px solid transparent;
+}
+
+.nav-item:hover {
+  color: var(--text-primary);
+  background: rgba(255,255,255,0.04);
+  border-color: var(--border);
+}
+
+.nav-item.active {
+  color: var(--text-primary);
+  background: linear-gradient(135deg, rgba(123,47,255,0.18) 0%, rgba(79,142,247,0.10) 100%);
+  border-color: rgba(123,47,255,0.35);
+}
+
+.nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: -1px; top: 20%; bottom: 20%;
+  width: 3px;
+  background: linear-gradient(180deg, var(--accent-purple), var(--accent-blue));
+  border-radius: 0 2px 2px 0;
+}
+
+.nav-icon {
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  opacity: 0.7;
+  font-size: 15px;
+}
+
+.nav-item.active .nav-icon,
+.nav-item:hover .nav-icon { opacity: 1; }
+
+.sidebar-footer {
+  padding: 16px;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.client-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  border-radius: var(--radius-sm);
+  background: rgba(255,255,255,0.03);
+}
+
+.client-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: white;
+  font-family: var(--font-head);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.client-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 2px;
+}
+
+.client-info { flex: 1; overflow: hidden; }
+.client-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: var(--font-head);
+}
+.client-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* ============================================================
+   MAIN CONTENT
+   ============================================================ */
+.main {
+  margin-left: var(--sidebar-w);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* ============================================================
+   TOPBAR
+   ============================================================ */
+.topbar {
+  height: var(--topbar-h);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(10,10,26,0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.hamburger {
+  display: none;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: 18px;
+  transition: all var(--transition);
+}
+.hamburger:hover { background: rgba(255,255,255,0.06); }
+
+.topbar-logos {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.topbar-divider {
+  width: 1px;
+  height: 24px;
+  background: var(--border);
+}
+
+.topbar-logo-hodari img {
+  height: 22px;
+  filter: invert(1) brightness(2);
+}
+
+.topbar-logo-hodari-text {
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: 16px;
+  letter-spacing: -0.3px;
+  background: linear-gradient(135deg, #fff 0%, var(--accent-purple) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.topbar-logo-client img {
+  height: 28px;
+  object-fit: contain;
+}
+
+.topbar-logo-client-text {
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--text-primary);
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.portal-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  background: linear-gradient(135deg, rgba(123,47,255,0.15), rgba(79,142,247,0.12));
+  border: 1px solid rgba(123,47,255,0.30);
+  border-radius: 99px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: var(--font-head);
+  white-space: nowrap;
+}
+
+.portal-badge::before {
+  content: '';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent-green);
+  box-shadow: 0 0 8px var(--accent-green);
+  animation: pulse-dot 2s infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; box-shadow: 0 0 8px var(--accent-green); }
+  50% { opacity: 0.6; box-shadow: 0 0 3px var(--accent-green); }
+}
+
+.page-title {
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--text-secondary);
+}
+
+/* ============================================================
+   CONTENT AREA
+   ============================================================ */
+.content {
+  flex: 1;
+  padding: 28px;
+  max-width: 1200px;
+  width: 100%;
+}
+
+/* ============================================================
+   SECTIONS
+   ============================================================ */
+.section {
+  display: none;
+  animation: fadeSlideIn 0.32s cubic-bezier(0.4,0,0.2,1) forwards;
+}
+
+.section.active { display: block; }
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.section-header {
+  margin-bottom: 24px;
+}
+
+.section-title {
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: 26px;
+  letter-spacing: -0.5px;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.section-subtitle {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* ============================================================
+   CARDS
+   ============================================================ */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  transition: all var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(123,47,255,0.4), transparent);
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-light);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3), 0 0 0 1px rgba(123,47,255,0.1);
+}
+
+.card:hover::before { opacity: 1; }
+
+/* ============================================================
+   KPI CARDS
+   ============================================================ */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.kpi-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+  transition: all var(--transition);
+}
+
+.kpi-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(123,47,255,0.06) 0%, rgba(79,142,247,0.04) 100%);
+  pointer-events: none;
+}
+
+.kpi-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(123,47,255,0.4);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.35), 0 0 60px rgba(123,47,255,0.07);
+}
+
+.kpi-card.green::after {
+  background: linear-gradient(135deg, rgba(0,212,160,0.06) 0%, rgba(79,142,247,0.04) 100%);
+}
+.kpi-card.green:hover { border-color: rgba(0,212,160,0.35); }
+
+.kpi-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.kpi-label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-family: var(--font-head);
+}
+
+.kpi-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  background: rgba(123,47,255,0.15);
+  border: 1px solid rgba(123,47,255,0.25);
+}
+
+.kpi-card.green .kpi-icon {
+  background: rgba(0,212,160,0.12);
+  border-color: rgba(0,212,160,0.22);
+}
+
+.kpi-number {
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: 48px;
+  letter-spacing: -2px;
+  line-height: 1;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, #F0F0FF 0%, rgba(240,240,255,0.7) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.kpi-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.kpi-delta {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-green);
+}
+
+.kpi-delta span { font-size: 12px; color: var(--text-muted); font-weight: 400; }
+
+.kpi-sparkline { opacity: 0.8; }
+
+/* ============================================================
+   LINE CHARTS
+   ============================================================ */
+.line-chart-container {
+  background: linear-gradient(135deg, #1a0533 0%, #0d1b4a 100%);
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 16px 0;
+  border: 1px solid rgba(123,47,255,0.18);
+}
+
+.line-chart-title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.9px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 12px 16px 0;
+  font-family: var(--font-head);
+}
+
+.kpi-chart-full {
+  background: linear-gradient(135deg, rgba(26,5,51,0.55) 0%, rgba(13,27,74,0.55) 100%);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 14px;
+  border: 1px solid rgba(123,47,255,0.14);
+}
+
+/* ============================================================
+   MINI SUMMARY GRID
+   ============================================================ */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.summary-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.summary-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-light);
+  background: var(--bg-card-hover);
+}
+
+.summary-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.summary-card-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: var(--font-head);
+}
+
+.summary-card-date {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* ============================================================
+   BADGES
+   ============================================================ */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 600;
+  font-family: var(--font-head);
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+
+.badge::before {
+  content: '';
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.badge-purple {
+  background: rgba(123,47,255,0.15);
+  border: 1px solid rgba(123,47,255,0.30);
+  color: #C084FC;
+}
+.badge-purple::before { background: #C084FC; }
+
+.badge-green {
+  background: rgba(0,212,160,0.12);
+  border: 1px solid rgba(0,212,160,0.28);
+  color: var(--accent-green);
+}
+.badge-green::before { background: var(--accent-green); box-shadow: 0 0 4px var(--accent-green); }
+
+.badge-yellow {
+  background: rgba(245,197,66,0.12);
+  border: 1px solid rgba(245,197,66,0.28);
+  color: var(--accent-yellow);
+}
+.badge-yellow::before { background: var(--accent-yellow); }
+
+.badge-blue {
+  background: rgba(79,142,247,0.12);
+  border: 1px solid rgba(79,142,247,0.28);
+  color: var(--accent-blue);
+}
+.badge-blue::before { background: var(--accent-blue); }
+
+.badge-gray {
+  background: rgba(136,136,170,0.10);
+  border: 1px solid rgba(136,136,170,0.22);
+  color: var(--text-secondary);
+}
+.badge-gray::before { background: var(--text-secondary); }
+
+.badge-red {
+  background: rgba(255,79,106,0.12);
+  border: 1px solid rgba(255,79,106,0.28);
+  color: var(--accent-red);
+}
+.badge-red::before { background: var(--accent-red); }
+
+.badge-orange {
+  background: rgba(251,146,60,0.12);
+  border: 1px solid rgba(251,146,60,0.28);
+  color: #FB923C;
+}
+.badge-orange::before { background: #FB923C; }
+
+/* Animated badge */
+.badge-animated::before {
+  animation: pulse-badge 1.8s infinite;
+}
+@keyframes pulse-badge {
+  0%, 100% { box-shadow: 0 0 0 0 currentColor; opacity: 1; }
+  50% { box-shadow: 0 0 0 3px transparent; opacity: 0.6; }
+}
+
+/* ============================================================
+   SECTION 2 — PROJETOS
+   ============================================================ */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.project-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  transition: all var(--transition);
+  cursor: default;
+}
+
+.project-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-light);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.25);
+}
+
+.project-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.project-card-name {
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+.project-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 14px;
+}
+
+.project-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.project-meta-icon { font-size: 12px; }
+
+/* ============================================================
+   SECTION 3 — RESULTADOS
+   ============================================================ */
+.tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 4px;
+  flex-wrap: wrap;
+}
+
+.tab-btn {
+  padding: 7px 13px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition);
+  background: transparent;
+  border: none;
+  font-family: var(--font-body);
+  white-space: nowrap;
+}
+
+.tab-btn:hover { color: var(--text-primary); background: rgba(255,255,255,0.04); }
+
+.tab-btn.active {
+  background: linear-gradient(135deg, rgba(123,47,255,0.20), rgba(79,142,247,0.15));
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.tab-pane { display: none; animation: fadeSlideIn 0.25s ease forwards; }
+.tab-pane.active { display: block; }
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.metric-card {
+  background: linear-gradient(135deg, rgba(18,18,42,0.9), rgba(18,18,42,0.7));
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+  text-align: center;
+  transition: all var(--transition);
+}
+
+.metric-card:hover {
+  border-color: var(--border-light);
+  transform: translateY(-2px);
+}
+
+.metric-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  font-family: var(--font-head);
+}
+
+.metric-value {
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: 28px;
+  letter-spacing: -1px;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.metric-value.accent-purple { color: #C084FC; }
+.metric-value.accent-blue { color: var(--accent-blue); }
+.metric-value.accent-green { color: var(--accent-green); }
+.metric-value.accent-yellow { color: var(--accent-yellow); }
+
+.metric-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* Strategy narrative card */
+.narrative-card {
+  background: linear-gradient(135deg, rgba(123,47,255,0.07), rgba(79,142,247,0.05));
+  border: 1px solid rgba(123,47,255,0.20);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+
+.narrative-title {
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 17px;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.narrative-body {
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--text-secondary);
+}
+
+.narrative-body p + p { margin-top: 12px; }
+
+.narrative-highlight {
+  background: linear-gradient(135deg, rgba(123,47,255,0.12), rgba(79,142,247,0.10));
+  border-left: 3px solid var(--accent-purple);
+  border-radius: 0 8px 8px 0;
+  padding: 12px 16px;
+  margin-top: 16px;
+  font-size: 14px;
+  color: var(--text-primary);
+  font-weight: 500;
+  font-style: italic;
+}
+
+/* ============================================================
+   SECTION 4 — DEMANDAS
+   ============================================================ */
+.demand-form {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.form-title {
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+}
+
+.form-grid { display: grid; gap: 14px; }
+
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+
+.form-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  font-family: var(--font-head);
+}
+
+.form-control {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-size: 14px;
+  font-family: var(--font-body);
+  padding: 10px 14px;
+  transition: all var(--transition);
+  outline: none;
+  width: 100%;
+  resize: vertical;
+}
+
+.form-control:focus {
+  border-color: var(--accent-purple);
+  box-shadow: 0 0 0 3px rgba(123,47,255,0.12);
+  background: rgba(123,47,255,0.05);
+}
+
+.form-control option { background: #1A1A35; }
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 22px;
+  background: linear-gradient(135deg, var(--accent-purple), #9B4FFF);
+  border: none;
+  border-radius: var(--radius-sm);
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: var(--font-head);
+  cursor: pointer;
+  transition: all var(--transition);
+  margin-top: 6px;
+  box-shadow: 0 4px 16px rgba(123,47,255,0.30);
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(123,47,255,0.40);
+  background: linear-gradient(135deg, #8B3FFF, #AB5FFF);
+}
+
+.btn-primary:active { transform: translateY(0); }
+
+.demand-list { display: flex; flex-direction: column; gap: 12px; }
+
+.demand-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  transition: all var(--transition);
+}
+
+.demand-item:hover { border-color: var(--border-light); }
+
+.demand-icon {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  background: rgba(123,47,255,0.12);
+  border: 1px solid rgba(123,47,255,0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.demand-content { flex: 1; }
+.demand-title { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 3px; font-family: var(--font-head); }
+.demand-desc { font-size: 13px; color: var(--text-secondary); }
+.demand-date { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+.demand-status { flex-shrink: 0; }
+
+/* ============================================================
+   SECTION 5 — FINANCEIRO
+   ============================================================ */
+.financeiro-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.payment-card {
+  background: linear-gradient(135deg, rgba(245,197,66,0.06), rgba(18,18,42,0.9));
+  border: 1px solid rgba(245,197,66,0.22);
+  border-radius: var(--radius);
+  padding: 22px;
+  transition: all var(--transition);
+}
+
+.payment-card:hover { transform: translateY(-2px); }
+
+.payment-card-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--accent-yellow);
+  margin-bottom: 10px;
+  font-family: var(--font-head);
+}
+
+.payment-amount {
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: 36px;
+  letter-spacing: -1.5px;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.payment-due {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 14px;
+}
+
+.pix-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px;
+  transition: all var(--transition);
+}
+
+.pix-card:hover { border-color: var(--border-light); }
+
+.pix-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--accent-green);
+  margin-bottom: 10px;
+  font-family: var(--font-head);
+}
+
+.pix-title { font-size: 15px; font-weight: 700; color: var(--text-primary); margin-bottom: 10px; font-family: var(--font-head); }
+
+.pix-key-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(0,212,160,0.06);
+  border: 1px solid rgba(0,212,160,0.20);
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+
+.pix-key {
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  color: var(--accent-green);
+  flex: 1;
+  word-break: break-all;
+  letter-spacing: 0.5px;
+}
+
+.btn-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  background: rgba(0,212,160,0.12);
+  border: 1px solid rgba(0,212,160,0.28);
+  border-radius: 6px;
+  color: var(--accent-green);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+  white-space: nowrap;
+  font-family: var(--font-head);
+}
+
+.btn-copy:hover { background: rgba(0,212,160,0.20); }
+.btn-copy.copied { background: rgba(0,212,160,0.22); color: #00FFCC; }
+
+.history-section { }
+
+.history-title {
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--text-primary);
+  margin-bottom: 14px;
+}
+
+.history-list { display: flex; flex-direction: column; gap: 10px; }
+
+.history-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all var(--transition);
+}
+
+.history-item:hover { border-color: var(--border-light); }
+
+.history-left { display: flex; align-items: center; gap: 12px; }
+.history-month { font-size: 14px; font-weight: 600; color: var(--text-primary); font-family: var(--font-head); }
+.history-date { font-size: 12px; color: var(--text-muted); }
+.history-amount { font-family: var(--font-head); font-weight: 700; font-size: 15px; color: var(--text-primary); }
+
+/* ============================================================
+   SECTION 6 — SUPORTE
+   ============================================================ */
+.suporte-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48px 24px;
+  text-align: center;
+}
+
+.suporte-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 40px;
+  max-width: 480px;
+  width: 100%;
+  text-align: center;
+}
+
+.suporte-icon {
+  width: 64px; height: 64px;
+  border-radius: 16px;
+  background: rgba(0,212,160,0.12);
+  border: 1px solid rgba(0,212,160,0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  margin: 0 auto 20px;
+}
+
+.suporte-title {
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: 22px;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.suporte-sub {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 28px;
+  line-height: 1.6;
+}
+
+.btn-whatsapp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 32px;
+  background: linear-gradient(135deg, #25D366, #128C7E);
+  border: none;
+  border-radius: var(--radius-sm);
+  color: white;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: var(--font-head);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all var(--transition);
+  box-shadow: 0 6px 24px rgba(37,211,102,0.30);
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+.btn-whatsapp:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 32px rgba(37,211,102,0.40);
+}
+
+.suporte-hours {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  margin-top: 20px;
+}
+
+.suporte-hours-title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+  font-family: var(--font-head);
+}
+
+.suporte-hours-text {
+  font-size: 14px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 20px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-left: var(--sidebar-w);
+}
+
+.footer-left {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.footer-left a {
+  color: var(--accent-purple);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.footer-right {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-style: italic;
+  letter-spacing: 0.3px;
+}
+
+/* ============================================================
+   DIVIDERS & HELPERS
+   ============================================================ */
+.section-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 20px 0;
+}
+
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.stat-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  padding: 8px 0;
+}
+
+.stat-row + .stat-row {
+  border-top: 1px solid rgba(255,255,255,0.04);
+}
+
+.stat-row-label { color: var(--text-muted); flex: 1; }
+.stat-row-value { font-weight: 600; color: var(--text-primary); font-family: var(--font-head); }
+
+/* ============================================================
+   OVERLAY (mobile sidebar)
+   ============================================================ */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 99;
+  backdrop-filter: blur(4px);
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 900px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+  .sidebar.open {
+    transform: translateX(0);
+    box-shadow: 16px 0 48px rgba(0,0,0,0.5);
+  }
+  .sidebar-overlay { display: block; }
+  .sidebar-overlay.hidden { display: none; }
+
+  .main { margin-left: 0; }
+  footer { margin-left: 0; }
+
+  .hamburger { display: flex; }
+  .portal-badge { display: none; }
+  .topbar { padding: 0 16px; }
+  .content { padding: 16px; }
+  .kpi-grid { grid-template-columns: 1fr; }
+  .kpi-number { font-size: 40px; }
+  .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+  .tabs { overflow-x: auto; flex-wrap: nowrap; }
+}
+
+@media (max-width: 540px) {
+  .summary-grid { grid-template-columns: 1fr; }
+  .projects-grid { grid-template-columns: 1fr; }
+  .financeiro-grid { grid-template-columns: 1fr; }
+  .metrics-grid { grid-template-columns: 1fr 1fr; }
+  .tab-btn { font-size: 12px; padding: 6px 10px; }
+  .section-title { font-size: 22px; }
+}
+
+/* ============================================================
+   TOAST NOTIFICATION
+   ============================================================ */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: #1A1A35;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  padding: 12px 18px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 999;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  transform: translateY(100px);
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+
+.toast.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* ============================================================
+   STAGGERED ENTRY ANIMATIONS
+   ============================================================ */
+.stagger-1 { animation-delay: 0.04s; }
+.stagger-2 { animation-delay: 0.08s; }
+.stagger-3 { animation-delay: 0.12s; }
+.stagger-4 { animation-delay: 0.16s; }
+.stagger-5 { animation-delay: 0.20s; }
+.stagger-6 { animation-delay: 0.24s; }
+.stagger-7 { animation-delay: 0.28s; }
+
+.anim-in {
+  animation: fadeSlideIn 0.35s cubic-bezier(0.4,0,0.2,1) both;
+}
+
+/* ============================================================
+   TIMELINE — AGENDA & ATUALIZAÇÕES
+   ============================================================ */
+.timeline-wrap {
+  background: #0F0F1E;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px 22px 28px;
+  margin-top: 28px;
+  position: relative;
+  overflow: hidden;
+}
+
+.timeline-wrap::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(123,47,255,0.04) 0%, rgba(79,142,247,0.03) 100%);
+  pointer-events: none;
+}
+
+.timeline-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+
+.timeline-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.timeline-section-label {
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--text-primary);
+}
+
+.timeline-header-right { display: flex; align-items: center; gap: 8px; }
+
+.timeline-date-chip {
+  font-family: var(--font-head);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  border-radius: 99px;
+  padding: 4px 12px;
+}
+
+/* Body: eixo + linha + eventos em grid */
+.timeline-body {
+  display: grid;
+  grid-template-columns: 20px 1fr;
+  gap: 0;
+  align-items: stretch;
+}
+
+/* Coluna de horários */
+.tl-axis {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.tl-time {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  font-family: var(--font-head);
+  letter-spacing: 0.4px;
+  height: 72px;
+  display: flex;
+  align-items: flex-start;
+  padding-top: 4px;
+}
+
+.tl-time-gap { margin-top: 8px; }
+
+/* Linha vertical e dots */
+.tl-line-track {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.tl-vline {
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1px;
+  background: linear-gradient(180deg, var(--accent-purple) 0%, var(--accent-blue) 60%, transparent 100%);
+  opacity: 0.35;
+}
+
+.tl-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--bg-card);
+  border: 2px solid var(--accent-purple);
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+}
+
+.tl-dot-1 { top: 8px;   border-color: var(--accent-purple); box-shadow: 0 0 6px rgba(123,47,255,0.5); }
+.tl-dot-2 { top: 80px;  border-color: var(--accent-yellow); }
+.tl-dot-3 { top: 160px; border-color: var(--accent-blue); }
+
+/* Coluna de eventos */
+.tl-events {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-left: 10px;
+}
+
+.tl-event {
+  border-radius: 12px;
+  padding: 12px 14px;
+  border: 1px solid transparent;
+  transition: all var(--transition);
+}
+
+.tl-event:hover { transform: translateX(3px); }
+
+.tl-event-purple {
+  background: rgba(123,47,255,0.10);
+  border-color: rgba(123,47,255,0.22);
+  box-shadow: 0 2px 12px rgba(123,47,255,0.08);
+}
+
+.tl-event-blue {
+  background: rgba(79,142,247,0.09);
+  border-color: rgba(79,142,247,0.20);
+  box-shadow: 0 2px 12px rgba(79,142,247,0.07);
+}
+
+.tl-event-yellow {
+  background: rgba(245,197,66,0.08);
+  border-color: rgba(245,197,66,0.20);
+  box-shadow: 0 2px 12px rgba(245,197,66,0.06);
+}
+
+.tl-event-green {
+  background: rgba(0,212,160,0.08);
+  border-color: rgba(0,212,160,0.20);
+  box-shadow: 0 2px 12px rgba(0,212,160,0.07);
+}
+
+.tl-event-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.tl-event-title {
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+.tl-event-sub {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+/* Botão + flutuante */
+.tl-add-btn {
+  position: absolute;
+  bottom: 18px;
+  right: 18px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--accent-green);
+  border: none;
+  color: #0A1A14;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(0,212,160,0.35);
+  transition: all var(--transition);
+}
+
+.tl-add-btn:hover {
+  transform: scale(1.1) rotate(90deg);
+  box-shadow: 0 6px 22px rgba(0,212,160,0.50);
+}
+
+@media (max-width: 540px) {
+  .tl-event-head { flex-wrap: wrap; }
+  .tl-time { height: 76px; }
+  .tl-dot-3 { top: 164px; }
+}
+
+
+/* ============================================================
+   MODAL RELATÓRIO
+   ============================================================ */
+.report-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  z-index: 9000; overflow: hidden;
+  background: rgba(4,4,14,0.88);
+  backdrop-filter: blur(6px);
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.28s ease;
+}
+.report-overlay.open { opacity: 1; pointer-events: all; }
+
+.report-modal {
+  position: fixed; top: 50%; left: 50%;
+  transform: translate(-50%, -48%);
+  width: 90%; max-width: 900px; height: 90vh;
+  overflow-y: auto; z-index: 9001;
+  border-radius: 16px;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.32s ease, transform 0.32s cubic-bezier(0.22,1,0.36,1);
+}
+.report-modal.open { opacity: 1; transform: translate(-50%, -50%); pointer-events: all; }
+
+.report-inner {
+  width: 100%;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  position: relative;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(123,47,255,0.12);
+  padding-bottom: 60px;
+}
+
+/* Close button */
+.report-close {
+  position: sticky; top: 0; z-index: 10;
+  display: flex; justify-content: flex-end;
+  padding: 16px 20px 0;
+  background: transparent;
+}
+.report-close-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: var(--transition);
+}
+.report-close-btn:hover { background: rgba(255,255,255,0.12); color: var(--text-primary); }
+
+/* Header */
+.rp-header {
+  padding: 24px 36px 28px;
+  background: linear-gradient(135deg, rgba(123,47,255,0.08) 0%, rgba(79,142,247,0.04) 100%);
+  border-bottom: 1px solid var(--border);
+}
+.rp-header-top {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 20px;
+}
+.rp-logo { height: 28px; }
+.rp-badge-report {
+  font-family: var(--font-head); font-size: 11px; font-weight: 700;
+  letter-spacing: 1.2px; text-transform: uppercase;
+  background: linear-gradient(135deg, rgba(123,47,255,0.18), rgba(79,142,247,0.12));
+  border: 1px solid rgba(123,47,255,0.35);
+  color: #C084FC; padding: 5px 12px; border-radius: 20px;
+}
+.rp-title {
+  font-family: var(--font-head); font-size: 22px; font-weight: 800;
+  color: var(--text-primary); margin-bottom: 6px; line-height: 1.3;
+}
+.rp-subtitle { font-size: 13px; color: var(--text-secondary); margin-bottom: 16px; }
+.rp-meta-row {
+  display: flex; flex-wrap: wrap; gap: 20px;
+  font-size: 12px; color: var(--text-secondary);
+}
+.rp-meta-item { display: flex; align-items: center; gap: 6px; }
+.rp-meta-label { color: var(--text-muted); }
+.rp-meta-value { color: var(--text-primary); font-weight: 600; }
+
+/* Section headers */
+.rp-section {
+  padding: 28px 36px;
+  border-bottom: 1px solid var(--border);
+}
+.rp-section:last-of-type { border-bottom: none; }
+.rp-section-title {
+  font-family: var(--font-head); font-size: 11px; font-weight: 700;
+  letter-spacing: 1.4px; text-transform: uppercase;
+  color: var(--text-muted); margin-bottom: 18px;
+  display: flex; align-items: center; gap: 8px;
+}
+.rp-section-title::after {
+  content: ''; flex: 1; height: 1px;
+  background: linear-gradient(to right, var(--border), transparent);
+}
+
+/* KPI grid grande */
+.rp-kpi-grid {
+  display: grid; grid-template-columns: repeat(4,1fr); gap: 14px;
+  margin-bottom: 28px;
+}
+@media (max-width: 680px) { .rp-kpi-grid { grid-template-columns: repeat(2,1fr); } }
+.rp-kpi {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px; text-align: center;
+}
+.rp-kpi-value {
+  font-family: var(--font-head); font-size: 28px; font-weight: 800;
+  background: linear-gradient(135deg, #fff 0%, var(--accent-purple) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; line-height: 1.1; margin-bottom: 6px;
+}
+.rp-kpi-label { font-size: 12px; color: var(--text-secondary); font-weight: 500; line-height: 1.4; }
+.rp-kpi-sub { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+/* Campaign cards */
+.rp-camp-grid { display: flex; flex-direction: column; gap: 14px; margin-bottom: 24px; }
+.rp-camp {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+}
+.rp-camp-head {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px; gap: 10px;
+}
+.rp-camp-name {
+  font-family: var(--font-head); font-size: 14px; font-weight: 700;
+  color: var(--text-primary);
+}
+.rp-camp-stats {
+  display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 12px;
+}
+.rp-stat {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 8px; padding: 8px 12px;
+  min-width: 100px;
+}
+.rp-stat-label { font-size: 10px; color: var(--text-muted); letter-spacing: 0.6px; text-transform: uppercase; margin-bottom: 3px; }
+.rp-stat-value { font-family: var(--font-head); font-size: 15px; font-weight: 700; color: var(--text-primary); }
+.rp-camp-note { font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
+
+/* Origin table */
+.rp-table { width: 100%; border-collapse: collapse; margin-bottom: 0; }
+.rp-table th {
+  text-align: left; font-size: 10px; font-weight: 700; letter-spacing: 0.9px;
+  text-transform: uppercase; color: var(--text-muted);
+  padding: 0 12px 10px; border-bottom: 1px solid var(--border);
+}
+.rp-table td {
+  padding: 11px 12px; font-size: 13px; color: var(--text-secondary);
+  border-bottom: 1px solid rgba(45,45,94,0.5);
+}
+.rp-table td:first-child { color: var(--text-primary); font-weight: 600; }
+.rp-table tr:last-child td { border-bottom: none; }
+.rp-table .conv-good { color: var(--accent-green); font-weight: 700; }
+.rp-table .conv-zero { color: var(--text-muted); }
+
+/* Alert card */
+.rp-alert {
+  background: linear-gradient(135deg, rgba(251,146,60,0.10), rgba(251,146,60,0.05));
+  border: 1px solid rgba(251,146,60,0.30);
+  border-radius: var(--radius); padding: 18px 20px;
+  margin-bottom: 14px;
+}
+.rp-alert-title {
+  font-family: var(--font-head); font-size: 13px; font-weight: 700;
+  color: #FB923C; margin-bottom: 6px;
+}
+.rp-alert-body { font-size: 12px; color: var(--text-secondary); line-height: 1.65; margin-bottom: 14px; }
+
+/* GMN 3 KPIs */
+.rp-gmn-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+@media (max-width: 560px) { .rp-gmn-grid { grid-template-columns: 1fr; } }
+.rp-gmn-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 16px; text-align: center;
+}
+.rp-gmn-value {
+  font-family: var(--font-head); font-size: 26px; font-weight: 800;
+  color: var(--accent-green); line-height: 1; margin-bottom: 6px;
+}
+.rp-gmn-label { font-size: 12px; color: var(--text-secondary); }
+
+/* Phase header */
+.rp-phase {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--font-head); font-size: 15px; font-weight: 800;
+  margin-bottom: 18px;
+}
+.rp-phase-badge-1 {
+  font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+  background: rgba(123,47,255,0.18); border: 1px solid rgba(123,47,255,0.35);
+  color: #C084FC; padding: 3px 10px; border-radius: 12px;
+}
+.rp-phase-badge-2 {
+  font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+  background: rgba(79,142,247,0.18); border: 1px solid rgba(79,142,247,0.35);
+  color: #7FB0FF; padding: 3px 10px; border-radius: 12px;
+}
+
+/* Action cards */
+.rp-action-grid { display: flex; flex-direction: column; gap: 14px; }
+.rp-action {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 18px 20px;
+}
+.rp-action-head {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
+}
+.rp-action-title {
+  font-family: var(--font-head); font-size: 13px; font-weight: 700; color: var(--text-primary);
+}
+.rp-action-budget {
+  margin-left: auto; font-size: 12px; font-weight: 600;
+  color: var(--accent-green); white-space: nowrap;
+}
+.rp-action-body { font-size: 12px; color: var(--text-secondary); line-height: 1.7; }
+.rp-action-body ul { padding-left: 16px; }
+.rp-action-body li { margin-bottom: 4px; }
+.rp-action-body strong { color: var(--text-primary); font-weight: 600; }
+
+/* Sub-section label inside action cards */
+.rp-sub-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.9px;
+  text-transform: uppercase; color: var(--text-muted);
+  margin: 12px 0 6px; display: block;
+}
+
+/* Finance table */
+.rp-fin-table { width: 100%; border-collapse: collapse; }
+.rp-fin-table th {
+  text-align: left; font-size: 10px; font-weight: 700; letter-spacing: 0.8px;
+  text-transform: uppercase; color: var(--text-muted);
+  padding: 0 12px 10px; border-bottom: 1px solid var(--border);
+}
+.rp-fin-table td {
+  padding: 11px 12px; font-size: 13px; color: var(--text-secondary);
+  border-bottom: 1px solid rgba(45,45,94,0.5);
+}
+.rp-fin-table td:first-child { color: var(--text-primary); font-weight: 600; }
+.rp-fin-table tr:last-child td {
+  border-bottom: none; font-weight: 700; color: var(--accent-purple);
+}
+.rp-fin-table tr:last-child td:first-child { color: var(--accent-purple); }
+
+/* Cronograma */
+.rp-crono-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 560px) { .rp-crono-grid { grid-template-columns: 1fr; } }
+.rp-crono-item {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 14px 16px;
+}
+.rp-crono-week {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.9px;
+  text-transform: uppercase; color: var(--accent-purple); margin-bottom: 4px;
+}
+.rp-crono-body { font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
+
+/* Footer */
+.rp-footer {
+  padding: 22px 36px;
+  background: rgba(255,255,255,0.015);
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+.rp-footer p { font-size: 12px; color: var(--text-muted); line-height: 1.7; }
+.rp-footer strong { color: var(--text-secondary); font-weight: 600; }
+
+/* Badge helpers used inside report */
+.badge-rp-green  { background: rgba(0,212,160,0.14); border: 1px solid rgba(0,212,160,0.28); color: #00D4A0; font-size: 10px; font-weight: 700; letter-spacing: 0.7px; padding: 3px 9px; border-radius: 12px; text-transform: uppercase; white-space: nowrap; }
+.badge-rp-yellow { background: rgba(245,197,66,0.14); border: 1px solid rgba(245,197,66,0.28); color: #F5C542; font-size: 10px; font-weight: 700; letter-spacing: 0.7px; padding: 3px 9px; border-radius: 12px; text-transform: uppercase; white-space: nowrap; }
+.badge-rp-orange { background: rgba(251,146,60,0.14); border: 1px solid rgba(251,146,60,0.28); color: #FB923C; font-size: 10px; font-weight: 700; letter-spacing: 0.7px; padding: 3px 9px; border-radius: 12px; text-transform: uppercase; white-space: nowrap; }
+.badge-rp-purple { background: rgba(123,47,255,0.18); border: 1px solid rgba(123,47,255,0.35); color: #C084FC; font-size: 10px; font-weight: 700; letter-spacing: 0.7px; padding: 3px 9px; border-radius: 12px; text-transform: uppercase; white-space: nowrap; }
+.badge-rp-blue   { background: rgba(79,142,247,0.14); border: 1px solid rgba(79,142,247,0.28); color: #7FB0FF; font-size: 10px; font-weight: 700; letter-spacing: 0.7px; padding: 3px 9px; border-radius: 12px; text-transform: uppercase; white-space: nowrap; }
+.badge-rp-b2c    { background: rgba(0,212,160,0.10); border: 1px solid rgba(0,212,160,0.22); color: #00D4A0; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 8px; }
+.badge-rp-b2b    { background: rgba(79,142,247,0.12); border: 1px solid rgba(79,142,247,0.25); color: #7FB0FF; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 8px; }
+
+/* Divider inside sections */
+.rp-divider { height: 1px; background: var(--border); margin: 20px 0; }
+</style>
+</head>
+<body>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+  <span>✓</span>
+  <span id="toast-msg">Chave PIX copiada!</span>
+</div>
+
+<!-- Sidebar overlay (mobile) -->
+<div class="sidebar-overlay hidden" id="overlay" onclick="closeSidebar()"></div>
+
+<div class="app-shell">
+
+  <!-- ========== SIDEBAR ========== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <img src="images/logo-hodari.png" alt="Hodari" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+      <div class="sidebar-logo-fallback" style="display:none">HODARI</div>
+    </div>
+
+    <nav class="sidebar-section">
+      <div class="sidebar-label">Menu</div>
+      <div class="nav-item active" data-section="dashboard" onclick="navigate('dashboard', this)">
+        <span class="nav-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        </span>
+        Dashboard
+      </div>
+      <div class="nav-item" data-section="projetos" onclick="navigate('projetos', this)">
+        <span class="nav-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+        </span>
+        Projetos
+      </div>
+      <div class="nav-item" data-section="resultados" onclick="navigate('resultados', this)">
+        <span class="nav-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        </span>
+        Resultados
+      </div>
+      <div class="nav-item" data-section="demandas" onclick="navigate('demandas', this)">
+        <span class="nav-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </span>
+        Demandas
+      </div>
+      <div class="nav-item" data-section="financeiro" onclick="navigate('financeiro', this)">
+        <span class="nav-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </span>
+        Financeiro
+      </div>
+      <div class="nav-item" data-section="suporte" onclick="navigate('suporte', this)">
+        <span class="nav-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.41 2 2 0 0 1 3.6 1.21h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6 6l.86-.86a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 16.92z"/></svg>
+        </span>
+        Suporte
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="client-chip">
+        <div class="client-avatar">
+          <img src="images/logo-cobertratil.png" alt="CB" onerror="this.style.display='none';this.parentElement.textContent='CB'">
+        </div>
+        <div class="client-info">
+          <div class="client-name">Cobertrátil</div>
+          <div class="client-sub">Junho 2026</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ========== MAIN ========== -->
+  <div class="main">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger" onclick="toggleSidebar()" aria-label="Menu">☰</button>
+        <div class="topbar-logos">
+          <div class="topbar-logo-hodari">
+            <img src="images/logo-hodari.png" alt="Hodari" style="height:32px;filter:invert(1) brightness(2)" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+            <span class="topbar-logo-hodari-text" style="display:none">HODARI</span>
+          </div>
+          <div class="topbar-divider"></div>
+          <div class="topbar-logo-client">
+            <img src="images/logo-cobertratil.png" alt="Cobertrátil" style="height:32px" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+            <span class="topbar-logo-client-text" style="display:none">COBERTRÁTIL</span>
+          </div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="portal-badge">Portal do Cliente — Junho 2026</div>
+      </div>
+    </header>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+      <!-- ======================================================
+           SEÇÃO 1: DASHBOARD
+           ====================================================== -->
+      <section class="section active" id="sec-dashboard">
+        <div class="section-header">
+          <h1 class="section-title">Visão Geral</h1>
+          <p class="section-subtitle">Resumo de performance — Junho 2026</p>
+        </div>
+
+        <!-- KPI Grid -->
+        <div class="kpi-grid">
+          <!-- Leads -->
+          <div class="kpi-card anim-in stagger-1">
+            <div class="kpi-top">
+              <span class="kpi-label">Leads Gerados</span>
+              <div class="kpi-icon">🎯</div>
+            </div>
+            <div class="kpi-number">204</div>
+            <div class="kpi-bottom">
+              <div class="kpi-delta">↑ +73% <span>vs. mês anterior</span></div>
+            </div>
+            <div class="kpi-chart-full">
+              <!-- leads trend: 98,120,145,168,180,204 -->
+              <svg viewBox="0 0 360 64" width="100%" height="64" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="fill-leads" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#7B2FFF" stop-opacity="0.30"/>
+                    <stop offset="100%" stop-color="#7B2FFF" stop-opacity="0"/>
+                  </linearGradient>
+                  <filter id="glow-leads" x="-60%" y="-60%" width="220%" height="220%">
+                    <feGaussianBlur stdDeviation="3" result="blur"/>
+                    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                  </filter>
+                </defs>
+                <path d="M 20,54 C 61,49 47,51 88,45 C 129,39 115,40 156,34 C 197,28 183,29 224,24 C 265,20 257,24 292,19 C 327,14 311,14 340,8 L 340,60 L 20,60 Z" fill="url(#fill-leads)"/>
+                <path d="M 20,54 C 61,49 47,51 88,45 C 129,39 115,40 156,34 C 197,28 183,29 224,24 C 265,20 257,24 292,19 C 327,14 311,14 340,8" stroke="#9B5FFF" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.35"/>
+                <path d="M 20,54 C 61,49 47,51 88,45 C 129,39 115,40 156,34 C 197,28 183,29 224,24 C 265,20 257,24 292,19 C 327,14 311,14 340,8" stroke="#7B2FFF" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                <circle cx="20"  cy="54" r="5"   fill="#7B2FFF" opacity="0.3" filter="url(#glow-leads)"/>
+                <circle cx="20"  cy="54" r="3"   fill="#7B2FFF"/><circle cx="20"  cy="54" r="1.5" fill="white"/>
+                <circle cx="88"  cy="45" r="5"   fill="#7B2FFF" opacity="0.3" filter="url(#glow-leads)"/>
+                <circle cx="88"  cy="45" r="3"   fill="#7B2FFF"/><circle cx="88"  cy="45" r="1.5" fill="white"/>
+                <circle cx="156" cy="34" r="5"   fill="#7B2FFF" opacity="0.3" filter="url(#glow-leads)"/>
+                <circle cx="156" cy="34" r="3"   fill="#7B2FFF"/><circle cx="156" cy="34" r="1.5" fill="white"/>
+                <circle cx="224" cy="24" r="5"   fill="#7B2FFF" opacity="0.3" filter="url(#glow-leads)"/>
+                <circle cx="224" cy="24" r="3"   fill="#7B2FFF"/><circle cx="224" cy="24" r="1.5" fill="white"/>
+                <circle cx="292" cy="19" r="5"   fill="#7B2FFF" opacity="0.3" filter="url(#glow-leads)"/>
+                <circle cx="292" cy="19" r="3"   fill="#7B2FFF"/><circle cx="292" cy="19" r="1.5" fill="white"/>
+                <circle cx="340" cy="8"  r="6"   fill="#7B2FFF" opacity="0.4" filter="url(#glow-leads)"/>
+                <circle cx="340" cy="8"  r="3.5" fill="#9B5FFF"/><circle cx="340" cy="8"  r="1.8" fill="white"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Vendas -->
+          <div class="kpi-card green anim-in stagger-2">
+            <div class="kpi-top">
+              <span class="kpi-label">Vendas Convertidas</span>
+              <div class="kpi-icon">✅</div>
+            </div>
+            <div class="kpi-number">6</div>
+            <div class="kpi-bottom">
+              <div class="kpi-delta" style="color: var(--accent-green)">4,3% <span>taxa de conversão</span></div>
+            </div>
+            <div class="kpi-chart-full">
+              <!-- valores: 3,5,4,7,6,8,6 — max=8 — altura=(val/8)*54, topo=62-h -->
+              <svg viewBox="0 0 360 80" width="100%" height="80" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <filter id="glow-bar-active" x="-60%" y="-80%" width="220%" height="260%">
+                    <feGaussianBlur stdDeviation="4" result="blur"/>
+                    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                  </filter>
+                  <linearGradient id="bar-active-grad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#00FFB8"/>
+                    <stop offset="100%" stop-color="#00D4A0"/>
+                  </linearGradient>
+                </defs>
+                <!-- val=3 → h=20, topo=42 -->
+                <rect x="8"   y="42" width="32" height="20" rx="6" fill="#1E1E3A" opacity="0.9"/>
+                <text x="24"  y="76" text-anchor="middle" fill="#8888AA" font-size="9" font-family="DM Sans,sans-serif">Dez</text>
+                <!-- val=5 → h=34, topo=28 -->
+                <rect x="56"  y="28" width="32" height="34" rx="6" fill="#1E1E3A" opacity="0.9"/>
+                <text x="72"  y="76" text-anchor="middle" fill="#8888AA" font-size="9" font-family="DM Sans,sans-serif">Jan</text>
+                <!-- val=4 → h=27, topo=35 -->
+                <rect x="104" y="35" width="32" height="27" rx="6" fill="#1E1E3A" opacity="0.9"/>
+                <text x="120" y="76" text-anchor="middle" fill="#8888AA" font-size="9" font-family="DM Sans,sans-serif">Fev</text>
+                <!-- val=7 → h=47, topo=15 -->
+                <rect x="152" y="15" width="32" height="47" rx="6" fill="#1E1E3A" opacity="0.9"/>
+                <text x="168" y="76" text-anchor="middle" fill="#8888AA" font-size="9" font-family="DM Sans,sans-serif">Mar</text>
+                <!-- val=6 → h=41, topo=21 -->
+                <rect x="200" y="21" width="32" height="41" rx="6" fill="#1E1E3A" opacity="0.9"/>
+                <text x="216" y="76" text-anchor="middle" fill="#8888AA" font-size="9" font-family="DM Sans,sans-serif">Abr</text>
+                <!-- val=8 → h=54, topo=8 -->
+                <rect x="248" y="8"  width="32" height="54" rx="6" fill="#1E1E3A" opacity="0.9"/>
+                <text x="264" y="76" text-anchor="middle" fill="#8888AA" font-size="9" font-family="DM Sans,sans-serif">Mai</text>
+                <!-- val=6 ATIVA → h=41, topo=21 -->
+                <rect x="296" y="21" width="32" height="41" rx="6" fill="#00D4A0" opacity="0.18" filter="url(#glow-bar-active)"/>
+                <rect x="296" y="21" width="32" height="41" rx="6" fill="url(#bar-active-grad)"/>
+                <rect x="298" y="22" width="28" height="9"  rx="4" fill="white" opacity="0.12"/>
+                <rect x="292" y="13" width="40" height="16" rx="5" fill="#0D0D20"/>
+                <rect x="292" y="13" width="40" height="16" rx="5" fill="none" stroke="#00D4A0" stroke-width="0.8" opacity="0.5"/>
+                <text x="312" y="24" text-anchor="middle" fill="#00D4A0" font-size="10" font-family="Plus Jakarta Sans,sans-serif" font-weight="700">6</text>
+                <polygon points="308,29 316,29 312,33" fill="#0D0D20"/>
+                <text x="312" y="76" text-anchor="middle" fill="#00D4A0" font-size="9" font-family="DM Sans,sans-serif" font-weight="600">Jun</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Summary Grid -->
+        <div style="margin-bottom: 12px;">
+          <p style="font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); font-family: var(--font-head);">Projetos Ativos</p>
+        </div>
+        <div class="summary-grid">
+          <div class="summary-card anim-in stagger-1" onclick="openReport()" style="cursor:pointer">
+            <div class="summary-card-top">
+              <span class="summary-card-name">Resumo Estratégico</span>
+              <span class="badge badge-purple">Estratégia</span>
+            </div>
+            <span class="summary-card-date">Atualizado em 10/06</span>
+          </div>
+          <div class="summary-card anim-in stagger-2" onclick="navigate('projetos', null)">
+            <div class="summary-card-top">
+              <span class="summary-card-name">Meta Ads</span>
+              <span class="badge badge-green badge-animated">Ativo</span>
+            </div>
+            <span class="summary-card-date">Atualizado em 09/06</span>
+          </div>
+          <div class="summary-card anim-in stagger-3" onclick="navigate('projetos', null)">
+            <div class="summary-card-top">
+              <span class="summary-card-name">LinkedIn</span>
+              <span class="badge badge-yellow">Em revisão</span>
+            </div>
+            <span class="summary-card-date">Atualizado em 08/06</span>
+          </div>
+          <div class="summary-card anim-in stagger-4" onclick="navigate('projetos', null)">
+            <div class="summary-card-top">
+              <span class="summary-card-name">Google Meu Negócio</span>
+              <span class="badge badge-green badge-animated">Ativo</span>
+            </div>
+            <span class="summary-card-date">Atualizado em 10/06</span>
+          </div>
+          <div class="summary-card anim-in stagger-5" onclick="navigate('projetos', null)">
+            <div class="summary-card-top">
+              <span class="summary-card-name">Google Ads</span>
+              <span class="badge badge-orange">Em reestruturação</span>
+            </div>
+            <span class="summary-card-date">Atualizado em 11/06</span>
+          </div>
+          <div class="summary-card anim-in stagger-6" onclick="navigate('projetos', null)">
+            <div class="summary-card-top">
+              <span class="summary-card-name">Instagram</span>
+              <span class="badge badge-green badge-animated">Ativo</span>
+            </div>
+            <span class="summary-card-date">Atualizado em 10/06</span>
+          </div>
+          <div class="summary-card anim-in stagger-7" onclick="navigate('projetos', null)">
+            <div class="summary-card-top">
+              <span class="summary-card-name">Presença Digital</span>
+              <span class="badge badge-gray">Monitoramento</span>
+            </div>
+            <span class="summary-card-date">Atualizado em 07/06</span>
+          </div>
+        </div>
+
+        <!-- AGENDA & ATUALIZAÇÕES -->
+        <div class="timeline-wrap anim-in stagger-1" style="animation-delay:.32s">
+          <div class="timeline-header">
+            <div class="timeline-header-left">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent-purple)"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              <span class="timeline-section-label">Agenda &amp; Atualizações</span>
+            </div>
+            <div class="timeline-header-right">
+              <span class="timeline-date-chip" id="tl-date-chip"></span>
+            </div>
+          </div>
+
+          <div class="timeline-body">
+            <!-- Linha vertical -->
+            <div class="tl-line-track">
+              <div class="tl-vline"></div>
+              <div class="tl-dot tl-dot-1"></div>
+              <div class="tl-dot tl-dot-2"></div>
+              <div class="tl-dot tl-dot-3"></div>
+            </div>
+
+            <!-- Cards de eventos -->
+            <div class="tl-events">
+
+              <div class="tl-event tl-event-purple">
+                <div class="tl-event-head">
+                  <span class="tl-event-title">Relatório enviado ao cliente</span>
+                  <span class="badge badge-purple">Resultados</span>
+                </div>
+                <div class="tl-event-sub">Resultados de mai–jun 2026 · <strong style="color:var(--text-secondary)">11/06/2026</strong></div>
+              </div>
+
+              <div class="tl-event tl-event-yellow">
+                <div class="tl-event-head">
+                  <span class="tl-event-title">Pagamento da mensalidade</span>
+                  <span class="badge badge-yellow">Financeiro</span>
+                </div>
+                <div class="tl-event-sub">R$ 3.200 — vencimento · <strong style="color:var(--text-secondary)">11/06/2026</strong></div>
+              </div>
+
+              <div class="tl-event tl-event-blue">
+                <div class="tl-event-head">
+                  <span class="tl-event-title">Pedido de criativos enviado</span>
+                  <span class="badge badge-blue">Meta Ads</span>
+                </div>
+                <div class="tl-event-sub">Briefing de anúncios para Meta Ads · <strong style="color:var(--text-secondary)">11/06/2026</strong></div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Botão + flutuante -->
+          <button class="tl-add-btn" title="Adicionar evento" aria-label="Adicionar evento">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+        </div>
+
+      </section>
+
+      <!-- ======================================================
+           SEÇÃO 2: PROJETOS
+           ====================================================== -->
+      <section class="section" id="sec-projetos">
+        <div class="section-header">
+          <h1 class="section-title">Projetos</h1>
+          <p class="section-subtitle">Todos os frentes ativas para Cobertrátil</p>
+        </div>
+
+        <div class="projects-grid">
+          <div class="project-card anim-in stagger-1" onclick="openReport()" style="cursor:pointer">
+            <div class="project-card-head">
+              <div class="project-card-name">📊 Resumo Estratégico</div>
+              <span class="badge badge-purple">Estratégia</span>
+            </div>
+            <p class="project-desc">Análise consolidada de todos os canais com direcionamentos mensais, posicionamento de marca e próximas ações estratégicas.</p>
+            <div class="project-meta">
+              <span class="project-meta-icon">🕐</span>
+              <span>Última atualização: 10/06/2026</span>
+            </div>
+          </div>
+
+          <div class="project-card anim-in stagger-2">
+            <div class="project-card-head">
+              <div class="project-card-name">📣 Meta Ads</div>
+              <span class="badge badge-green badge-animated">Ativo</span>
+            </div>
+            <p class="project-desc">Campanhas de tráfego pago no Facebook e Instagram com segmentação regional em Curitiba e Grande CWB, foco em leads qualificados.</p>
+            <div class="project-meta">
+              <span class="project-meta-icon">🕐</span>
+              <span>Última atualização: 09/06/2026</span>
+            </div>
+          </div>
+
+          <div class="project-card anim-in stagger-3">
+            <div class="project-card-head">
+              <div class="project-card-name">💼 LinkedIn</div>
+              <span class="badge badge-yellow">Em revisão</span>
+            </div>
+            <p class="project-desc">Estratégia de conteúdo B2B e construção de autoridade para público corporativo e construtoras. Conteúdos em aprovação pelo cliente.</p>
+            <div class="project-meta">
+              <span class="project-meta-icon">🕐</span>
+              <span>Última atualização: 08/06/2026</span>
+            </div>
+          </div>
+
+          <div class="project-card anim-in stagger-4">
+            <div class="project-card-head">
+              <div class="project-card-name">📍 Google Meu Negócio</div>
+              <span class="badge badge-green badge-animated">Ativo</span>
+            </div>
+            <p class="project-desc">Gestão do perfil local com publicações regulares, respostas a avaliações e otimização para buscas locais em Curitiba/PR.</p>
+            <div class="project-meta">
+              <span class="project-meta-icon">🕐</span>
+              <span>Última atualização: 10/06/2026</span>
+            </div>
+          </div>
+
+          <div class="project-card anim-in stagger-5">
+            <div class="project-card-head">
+              <div class="project-card-name">🔍 Google Ads</div>
+              <span class="badge badge-orange">Em reestruturação</span>
+            </div>
+            <p class="project-desc">Hodari assume estruturação do zero em Junho 2026. Histórico anterior encerrado; nova conta sendo configurada com foco em search de alta intenção.</p>
+            <div class="project-meta">
+              <span class="project-meta-icon">🕐</span>
+              <span>Última atualização: 11/06/2026</span>
+            </div>
+          </div>
+
+          <div class="project-card anim-in stagger-6">
+            <div class="project-card-head">
+              <div class="project-card-name">📸 Instagram</div>
+              <span class="badge badge-green badge-animated">Ativo</span>
+            </div>
+            <p class="project-desc">Gestão editorial com foco em portfólio de obras, cases de sucesso, reels de instalação e comunicação visual premium da marca.</p>
+            <div class="project-meta">
+              <span class="project-meta-icon">🕐</span>
+              <span>Última atualização: 10/06/2026</span>
+            </div>
+          </div>
+
+          <div class="project-card anim-in stagger-7">
+            <div class="project-card-head">
+              <div class="project-card-name">🌐 Presença Digital</div>
+              <span class="badge badge-gray">Monitoramento</span>
+            </div>
+            <p class="project-desc">Monitoramento geral da saúde digital da marca: score SEO, avaliações, menções e presença em diretórios e plataformas.</p>
+            <div class="project-meta">
+              <span class="project-meta-icon">🕐</span>
+              <span>Última atualização: 07/06/2026</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================================
+           SEÇÃO 3: RESULTADOS
+           ====================================================== -->
+      <section class="section" id="sec-resultados">
+        <div class="section-header">
+          <h1 class="section-title">Resultados</h1>
+          <p class="section-subtitle">Performance por canal — Junho 2026</p>
+        </div>
+
+        <div class="tabs">
+          <button class="tab-btn active" onclick="switchTab('tab-meta', this)">Meta Ads</button>
+          <button class="tab-btn" onclick="switchTab('tab-google', this)">Google Ads</button>
+          <button class="tab-btn" onclick="switchTab('tab-ig', this)">Instagram</button>
+          <button class="tab-btn" onclick="switchTab('tab-gmb', this)">G. Meu Negócio</button>
+          <button class="tab-btn" onclick="switchTab('tab-linkedin', this)">LinkedIn</button>
+          <button class="tab-btn" onclick="switchTab('tab-digital', this)">Presença Digital</button>
+          <button class="tab-btn" onclick="openReport()">Estratégia</button>
+        </div>
+
+        <!-- Meta Ads -->
+        <div class="tab-pane active" id="tab-meta">
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <div class="metric-label">Investimento</div>
+              <div class="metric-value accent-purple">R$1.617</div>
+              <div class="metric-sub">11/mai – 08/jun</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Leads</div>
+              <div class="metric-value accent-blue">204</div>
+              <div class="metric-sub">total gerados</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Orçamentos</div>
+              <div class="metric-value">140</div>
+              <div class="metric-sub">solicitados</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">CPL Médio</div>
+              <div class="metric-value accent-green">R$7,92</div>
+              <div class="metric-sub">custo por lead</div>
+            </div>
+          </div>
+
+          <!-- Campanhas detalhadas -->
+          <div style="margin: 16px 0 8px; font-size: 11px; font-weight: 600; letter-spacing: 0.9px; text-transform: uppercase; color: var(--text-muted); font-family: var(--font-head);">Campanhas</div>
+          <div class="card" style="padding: 0; overflow: hidden; margin-bottom: 16px;">
+            <div style="display: grid; grid-template-columns: 1fr auto auto auto; gap: 0; align-items: center;">
+              <div style="padding: 10px 16px; font-size: 11px; font-weight: 600; color: var(--text-muted); font-family: var(--font-head); letter-spacing: 0.5px; border-bottom: 1px solid var(--border);">CAMPANHA</div>
+              <div style="padding: 10px 16px; font-size: 11px; font-weight: 600; color: var(--text-muted); font-family: var(--font-head); text-align: right; border-bottom: 1px solid var(--border);">LEADS</div>
+              <div style="padding: 10px 16px; font-size: 11px; font-weight: 600; color: var(--text-muted); font-family: var(--font-head); text-align: right; border-bottom: 1px solid var(--border);">CPL</div>
+              <div style="padding: 10px 16px; font-size: 11px; font-weight: 600; color: var(--text-muted); font-family: var(--font-head); text-align: right; border-bottom: 1px solid var(--border);">GASTO</div>
+
+              <div style="padding: 12px 16px; font-size: 13px; font-weight: 600; color: var(--text-primary); font-family: var(--font-head); border-bottom: 1px solid rgba(255,255,255,0.04);">Principal</div>
+              <div style="padding: 12px 16px; text-align: right; font-size: 13px; font-weight: 700; color: var(--accent-green); font-family: var(--font-head); border-bottom: 1px solid rgba(255,255,255,0.04);">108</div>
+              <div style="padding: 12px 16px; text-align: right; font-size: 13px; color: var(--text-primary); font-family: var(--font-head); border-bottom: 1px solid rgba(255,255,255,0.04);">R$6,90</div>
+              <div style="padding: 12px 16px; text-align: right; font-size: 13px; color: var(--text-secondary); font-family: var(--font-head); border-bottom: 1px solid rgba(255,255,255,0.04);">R$745</div>
+
+              <div style="padding: 12px 16px; font-size: 13px; font-weight: 600; color: var(--text-primary); font-family: var(--font-head); border-bottom: 1px solid rgba(255,255,255,0.04);">Secundária</div>
+              <div style="padding: 12px 16px; text-align: right; font-size: 13px; font-weight: 700; color: var(--accent-blue); font-family: var(--font-head); border-bottom: 1px solid rgba(255,255,255,0.04);">29</div>
+              <div style="padding: 12px 16px; text-align: right; font-size: 13px; color: var(--text-primary); font-family: var(--font-head); border-bottom: 1px solid rgba(255,255,255,0.04);">R$11,32</div>
+              <div style="padding: 12px 16px; text-align: right; font-size: 13px; color: var(--text-secondary); font-family: var(--font-head); border-bottom: 1px solid rgba(255,255,255,0.04);">R$328</div>
+
+              <div style="padding: 12px 16px; font-size: 13px; font-weight: 600; color: var(--text-primary); font-family: var(--font-head);">Tráfego <span style="font-size:11px; color: var(--accent-red); font-weight:400">— descontinuar</span></div>
+              <div style="padding: 12px 16px; text-align: right; font-size: 13px; font-weight: 700; color: var(--text-muted); font-family: var(--font-head);">0</div>
+              <div style="padding: 12px 16px; text-align: right; font-size: 13px; color: var(--text-muted); font-family: var(--font-head);">2.836 cliques</div>
+              <div style="padding: 12px 16px; text-align: right; font-size: 13px; color: var(--text-secondary); font-family: var(--font-head);">R$544</div>
+            </div>
+          </div>
+
+          <!-- Origem dos leads -->
+          <div style="margin-bottom: 8px; font-size: 11px; font-weight: 600; letter-spacing: 0.9px; text-transform: uppercase; color: var(--text-muted); font-family: var(--font-head);">Origem dos Leads</div>
+          <div class="card" style="padding: 16px 20px; margin-bottom: 16px;">
+            <div class="stat-row"><span class="stat-row-label">Instagram</span><span class="stat-row-value" style="display:flex;align-items:center;gap:8px"><span style="color:var(--accent-green)">84 leads</span><span style="color:var(--text-muted);font-size:12px">3 fechados</span></span></div>
+            <div class="stat-row"><span class="stat-row-label">Facebook</span><span class="stat-row-value" style="display:flex;align-items:center;gap:8px"><span>42 leads</span><span style="color:var(--text-muted);font-size:12px">0 fechados</span></span></div>
+            <div class="stat-row"><span class="stat-row-label">Google</span><span class="stat-row-value" style="display:flex;align-items:center;gap:8px"><span>29 leads</span><span style="color:var(--text-muted);font-size:12px">0 fechados</span></span></div>
+            <div class="stat-row"><span class="stat-row-label">Parceira</span><span class="stat-row-value" style="display:flex;align-items:center;gap:8px"><span>21 leads</span><span style="color:var(--text-muted);font-size:12px">0 fechados</span></span></div>
+          </div>
+
+          <div class="line-chart-container">
+            <div class="line-chart-title">Evolução de Leads — mai–jun 2026 (acumulado)</div>
+            <svg viewBox="0 0 600 130" width="100%" height="130" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="fill-meta" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#7B2FFF" stop-opacity="0.28"/>
+                  <stop offset="100%" stop-color="#7B2FFF" stop-opacity="0"/>
+                </linearGradient>
+                <filter id="glow-meta" x="-60%" y="-60%" width="220%" height="220%">
+                  <feGaussianBlur stdDeviation="3.5" result="blur"/>
+                  <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+              </defs>
+              <!-- leads: 45,68,82,95,118,204 -->
+              <path d="M 50,90 C 110,87 90,85 150,80 C 210,75 190,78 250,74 C 310,70 290,73 350,68 C 410,63 390,61 450,58 C 510,44 490,36 550,21 L 550,98 L 50,98 Z" fill="url(#fill-meta)"/>
+              <path d="M 50,90 C 110,87 90,85 150,80 C 210,75 190,78 250,74 C 310,70 290,73 350,68 C 410,63 390,61 450,58 C 510,44 490,36 550,21" stroke="#9B5FFF" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.35"/>
+              <path d="M 50,90 C 110,87 90,85 150,80 C 210,75 190,78 250,74 C 310,70 290,73 350,68 C 410,63 390,61 450,58 C 510,44 490,36 550,21" stroke="#7B2FFF" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+              <circle cx="50"  cy="90" r="6" fill="#7B2FFF" opacity="0.3" filter="url(#glow-meta)"/><circle cx="50"  cy="90" r="3.5" fill="#7B2FFF"/><circle cx="50"  cy="90" r="1.8" fill="white"/><text x="50"  y="78" text-anchor="middle" fill="white" font-size="11" font-family="DM Sans,sans-serif" font-weight="600">45</text>
+              <circle cx="150" cy="80" r="6" fill="#7B2FFF" opacity="0.3" filter="url(#glow-meta)"/><circle cx="150" cy="80" r="3.5" fill="#7B2FFF"/><circle cx="150" cy="80" r="1.8" fill="white"/><text x="150" y="68" text-anchor="middle" fill="white" font-size="11" font-family="DM Sans,sans-serif" font-weight="600">68</text>
+              <circle cx="250" cy="74" r="6" fill="#7B2FFF" opacity="0.3" filter="url(#glow-meta)"/><circle cx="250" cy="74" r="3.5" fill="#7B2FFF"/><circle cx="250" cy="74" r="1.8" fill="white"/><text x="250" y="62" text-anchor="middle" fill="white" font-size="11" font-family="DM Sans,sans-serif" font-weight="600">82</text>
+              <circle cx="350" cy="68" r="6" fill="#7B2FFF" opacity="0.3" filter="url(#glow-meta)"/><circle cx="350" cy="68" r="3.5" fill="#7B2FFF"/><circle cx="350" cy="68" r="1.8" fill="white"/><text x="350" y="56" text-anchor="middle" fill="white" font-size="11" font-family="DM Sans,sans-serif" font-weight="600">95</text>
+              <circle cx="450" cy="58" r="6" fill="#7B2FFF" opacity="0.3" filter="url(#glow-meta)"/><circle cx="450" cy="58" r="3.5" fill="#7B2FFF"/><circle cx="450" cy="58" r="1.8" fill="white"/><text x="450" y="46" text-anchor="middle" fill="white" font-size="11" font-family="DM Sans,sans-serif" font-weight="600">118</text>
+              <circle cx="550" cy="21" r="7" fill="#7B2FFF" opacity="0.4" filter="url(#glow-meta)"/><circle cx="550" cy="21" r="4" fill="#9B5FFF"/><circle cx="550" cy="21" r="2" fill="white"/><text x="550" y="11" text-anchor="middle" fill="white" font-size="11" font-family="DM Sans,sans-serif" font-weight="700">204</text>
+              <text x="50"  y="118" text-anchor="middle" fill="#8888AA" font-size="10" font-family="DM Sans,sans-serif">Sem 1</text>
+              <text x="150" y="118" text-anchor="middle" fill="#8888AA" font-size="10" font-family="DM Sans,sans-serif">Sem 2</text>
+              <text x="250" y="118" text-anchor="middle" fill="#8888AA" font-size="10" font-family="DM Sans,sans-serif">Sem 3</text>
+              <text x="350" y="118" text-anchor="middle" fill="#8888AA" font-size="10" font-family="DM Sans,sans-serif">Sem 4</text>
+              <text x="450" y="118" text-anchor="middle" fill="#8888AA" font-size="10" font-family="DM Sans,sans-serif">Sem 5</text>
+              <text x="550" y="118" text-anchor="middle" fill="#8888AA" font-size="10" font-family="DM Sans,sans-serif" font-weight="600">Sem 6</text>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Google Ads -->
+        <div class="tab-pane" id="tab-google">
+          <!-- Aviso de reestruturação -->
+          <div style="background: linear-gradient(135deg, rgba(251,146,60,0.10), rgba(251,146,60,0.05)); border: 1px solid rgba(251,146,60,0.30); border-radius: 12px; padding: 18px 20px; margin-bottom: 20px; display: flex; align-items: flex-start; gap: 14px;">
+            <div style="font-size: 22px; flex-shrink: 0; margin-top: 2px;">⚙️</div>
+            <div>
+              <div style="font-family: var(--font-head); font-weight: 700; font-size: 15px; color: #FB923C; margin-bottom: 4px;">Em reestruturação — Junho 2026</div>
+              <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;">A Hodari assume a estruturação do Google Ads do zero em junho. A conta anterior apresentou queda progressiva de investimento até encerramento em maio. Nova estrutura em configuração com foco em search de alta intenção para Curitiba e região.</div>
+            </div>
+          </div>
+
+          <!-- Histórico de investimento -->
+          <div style="margin-bottom: 8px; font-size: 11px; font-weight: 600; letter-spacing: 0.9px; text-transform: uppercase; color: var(--text-muted); font-family: var(--font-head);">Histórico de Investimento (conta anterior)</div>
+          <div class="line-chart-container">
+            <div class="line-chart-title">Investimento mensal (R$) — Jan a Mai 2026</div>
+            <svg viewBox="0 0 600 130" width="100%" height="130" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="fill-google" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#FB923C" stop-opacity="0.22"/>
+                  <stop offset="100%" stop-color="#FB923C" stop-opacity="0"/>
+                </linearGradient>
+                <filter id="glow-google" x="-60%" y="-60%" width="220%" height="220%">
+                  <feGaussianBlur stdDeviation="3.5" result="blur"/>
+                  <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+              </defs>
+              <!-- valores: 140,299,319,91,1 — y: 59,24,20,70,90 — 5 pts, x: 80,180,280,380,480 -->
+              <path d="M 80,59 C 120,48 150,28 180,24 C 210,20 260,18 280,20 C 300,22 345,60 380,70 C 410,78 460,88 480,90 L 480,98 L 80,98 Z" fill="url(#fill-google)"/>
+              <path d="M 80,59 C 120,48 150,28 180,24 C 210,20 260,18 280,20 C 300,22 345,60 380,70 C 410,78 460,88 480,90" stroke="#FB923C" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.30"/>
+              <path d="M 80,59 C 120,48 150,28 180,24 C 210,20 260,18 280,20 C 300,22 345,60 380,70 C 410,78 460,88 480,90" stroke="#FB923C" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+              <!-- R$140 --><circle cx="80"  cy="59" r="6" fill="#FB923C" opacity="0.3" filter="url(#glow-google)"/><circle cx="80"  cy="59" r="3.5" fill="#FB923C"/><circle cx="80"  cy="59" r="1.8" fill="white"/><text x="80"  y="47" text-anchor="middle" fill="white" font-size="11" font-family="DM Sans,sans-serif" font-weight="600">R$140</text>
+              <!-- R$299 --><circle cx="180" cy="24" r="6" fill="#FB923C" opacity="0.3" filter="url(#glow-google)"/><circle cx="180" cy="24" r="3.5" fill="#FB923C"/><circle cx="180" cy="24" r="1.8" fill="white"/><text x="180" y="14" text-anchor="middle" fill="white" font-size="11" font-family="DM Sans,sans-serif" font-weight="600">R$299</text>
+              <!-- R$319 --><circle cx="280" cy="20" r="7" fill="#FB923C" opacity="0.4" filter="url(#glow-google)"/><circle cx="280" cy="20" r="4"   fill="#FDBA74"/><circle cx="280" cy="20" r="2"   fill="white"/><text x="280" y="10" text-anchor="middle" fill="white" font-size="11" font-family="DM Sans,sans-serif" font-weight="700">R$319</text>
+              <!-- R$91 --><circle cx="380"  cy="70" r="6" fill="#FB923C" opacity="0.3" filter="url(#glow-google)"/><circle cx="380"  cy="70" r="3.5" fill="#FB923C"/><circle cx="380"  cy="70" r="1.8" fill="white"/><text x="380"  y="58" text-anchor="middle" fill="white" font-size="11" font-family="DM Sans,sans-serif" font-weight="600">R$91</text>
+              <!-- R$1 --><circle cx="480" cy="90" r="6" fill="#FB923C" opacity="0.3" filter="url(#glow-google)"/><circle cx="480" cy="90" r="3.5" fill="#FB923C"/><circle cx="480" cy="90" r="1.8" fill="white"/><text x="480" y="78" text-anchor="middle" fill="white" font-size="11" font-family="DM Sans,sans-serif" font-weight="600">R$1</text>
+              <text x="80"  y="118" text-anchor="middle" fill="#8888AA" font-size="10" font-family="DM Sans,sans-serif">Jan</text>
+              <text x="180" y="118" text-anchor="middle" fill="#8888AA" font-size="10" font-family="DM Sans,sans-serif">Fev</text>
+              <text x="280" y="118" text-anchor="middle" fill="#8888AA" font-size="10" font-family="DM Sans,sans-serif">Mar</text>
+              <text x="380" y="118" text-anchor="middle" fill="#8888AA" font-size="10" font-family="DM Sans,sans-serif">Abr</text>
+              <text x="480" y="118" text-anchor="middle" fill="#8888AA" font-size="10" font-family="DM Sans,sans-serif">Mai</text>
+            </svg>
+          </div>
+          <div class="card" style="padding: 16px 20px;">
+            <div class="stat-row"><span class="stat-row-label">Total investido (jan–mai)</span><span class="stat-row-value">R$850</span></div>
+            <div class="stat-row"><span class="stat-row-label">Status atual</span><span class="stat-row-value" style="color:#FB923C">Reestruturação</span></div>
+            <div class="stat-row"><span class="stat-row-label">Previsão de ativação</span><span class="stat-row-value">Julho 2026</span></div>
+          </div>
+        </div>
+
+        <!-- Instagram -->
+        <div class="tab-pane" id="tab-ig">
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <div class="metric-label">Alcance</div>
+              <div class="metric-value accent-purple">18k</div>
+              <div class="metric-sub">contas únicas</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Engajamento</div>
+              <div class="metric-value accent-green">4,2%</div>
+              <div class="metric-sub">taxa média</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Seguidores</div>
+              <div class="metric-value accent-blue">+134</div>
+              <div class="metric-sub">novos no mês</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Publicações</div>
+              <div class="metric-value">18</div>
+              <div class="metric-sub">no período</div>
+            </div>
+          </div>
+          <div class="line-chart-container">
+            <div class="line-chart-title">Alcance Mensal (mil) — Jan a Jun 2026</div>
+            <svg viewBox="0 0 600 130" width="100%" height="130" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="fill-ig" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#C084FC" stop-opacity="0.28"/>
+                  <stop offset="100%" stop-color="#C084FC" stop-opacity="0"/>
+                </linearGradient>
+                <filter id="glow-ig" x="-60%" y="-60%" width="220%" height="220%">
+                  <feGaussianBlur stdDeviation="3.5" result="blur"/>
+                  <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+              </defs>
+              <path d="M 50,90 C 110,84 90,79 150,71 C 210,64 190,71 250,65 C 310,58 290,54 350,46 C 410,38 390,47 450,39 C 510,31 490,32 550,20 L 550,98 L 50,98 Z" fill="url(#fill-ig)"/>
+              <path d="M 50,90 C 110,84 90,79 150,71 C 210,64 190,71 250,65 C 310,58 290,54 350,46 C 410,38 390,47 450,39 C 510,31 490,32 550,20" stroke="#D4A8FF" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.35"/>
+              <path d="M 50,90 C 110,84 90,79 150,71 C 210,64 190,71 250,65 C 310,58 290,54 350,46 C 410,38 390,47 450,39 C 510,31 490,32 550,20" stroke="#C084FC" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+              <!-- 7k --><circle cx="50"  cy="90" r="6" fill="#C084FC" opacity="0.3" filter="url(#glow-ig)"/><circle cx="50"  cy="90" r="3.5" fill="#C084FC"/><circle cx="50"  cy="90" r="1.8" fill="white"/><text x="50"  y="78" text-anchor="middle" fill="white" font-size="11" font-family="DM Sans,sans-serif" font-weight="600">7k</text>
+              <!-- 10k --><circle cx="150" cy="71" r="6" fill="#C084FC" opacity="0.3" filter="url(#glow-ig)"/><circle cx="150" cy="71" r="3.5" fill="#C084FC"/><circle cx="150" cy="71" r="1.8" fill="white"/><text x="150" y="59" text-anchor="middle" fill="white" font-size="11" font-family="DM Sans,sans-serif" font-weight="600">10k</text>
+              <!-- 11k --><circle cx="250" cy="65" r="6" fill="#C084FC" opacity="0.3" filter="url(#glow-ig)"/><circle cx="250" cy="65" r="3.5" fill="#C084FC"/><circle cx="250" cy="65" r="1.8" fill="white"/><text x="250" y="53" text-anchor="middle" fill="white" font-size="11" font-family="DM Sans,sans-serif" font-weight="600">11k</text>
+              <!-- 14k --><circle cx="350" cy="46" r="6" fill="#C084FC" opacity="0.3" filter="url(#glow-ig)"/><circle cx="350" cy="46" r="3.5" fill="#C084FC"/><circle cx="350" cy="46" r="1.8" fill="white"/><text x="350" y="34" text-anchor="middle" fill="white" font-size="11" font-family="DM Sans,sans-serif" font-weight="600">14k</text>
+              <!-- 15k --><circle cx="450" cy="39" r="6" fill="#C084FC" opacity="0.3" filter="url(#glow-ig)"/><circle cx="450" cy="39" r="3.5" fill="#C084FC"/><circle cx="450" cy="39" r="1.8" fill="white"/><text x="450" y="27" text-anchor="middle" fill="white" font-size="11" font-family="DM Sans,sans-serif" font-weight="600">15k</text>
+              <!-- 18k --><circle cx="550" cy="20" r="7" fill="#C084FC" opacity="0.4" filter="url(#glow-ig)"/><circle cx="550" cy="20" r="4"   fill="#D4A8FF"/><circle cx="550" cy="20" r="2"   fill="white"/><text x="550" y="10" text-anchor="middle" fill="white" font-size="11" font-family="DM Sans,sans-serif" font-weight="700">18k</text>
+              <text x="50"  y="118" text-anchor="middle" fill="#8888AA" font-size="10" font-family="DM Sans,sans-serif">Jan</text>
+              <text x="150" y="118" text-anchor="middle" fill="#8888AA" font-size="10" font-family="DM Sans,sans-serif">Fev</text>
+              <text x="250" y="118" text-anchor="middle" fill="#8888AA" font-size="10" font-family="DM Sans,sans-serif">Mar</text>
+              <text x="350" y="118" text-anchor="middle" fill="#8888AA" font-size="10" font-family="DM Sans,sans-serif">Abr</text>
+              <text x="450" y="118" text-anchor="middle" fill="#8888AA" font-size="10" font-family="DM Sans,sans-serif">Mai</text>
+              <text x="550" y="118" text-anchor="middle" fill="#8888AA" font-size="10" font-family="DM Sans,sans-serif" font-weight="600">Jun</text>
+            </svg>
+          </div>
+          <div class="card" style="padding: 16px 20px;">
+            <div class="stat-row"><span class="stat-row-label">Impressões totais</span><span class="stat-row-value">44.200</span></div>
+            <div class="stat-row"><span class="stat-row-label">Curtidas</span><span class="stat-row-value">1.840</span></div>
+            <div class="stat-row"><span class="stat-row-label">Comentários</span><span class="stat-row-value">96</span></div>
+            <div class="stat-row"><span class="stat-row-label">Compartilhamentos</span><span class="stat-row-value">213</span></div>
+            <div class="stat-row"><span class="stat-row-label">Visitas ao perfil</span><span class="stat-row-value">3.100</span></div>
+          </div>
+        </div>
+
+        <!-- Google Meu Negócio -->
+        <div class="tab-pane" id="tab-gmb">
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <div class="metric-label">Interações</div>
+              <div class="metric-value accent-blue">192</div>
+              <div class="metric-sub">ações no perfil</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Crescimento</div>
+              <div class="metric-value accent-green">+44%</div>
+              <div class="metric-sub">anual</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Avaliação</div>
+              <div class="metric-value accent-yellow">5,0★</div>
+              <div class="metric-sub">44 avaliações</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Novas Aval.</div>
+              <div class="metric-value">44</div>
+              <div class="metric-sub">nota máxima</div>
+            </div>
+          </div>
+          <div class="line-chart-container">
+            <div class="line-chart-title">Buscas no Google Meu Negócio — Jan a Jun 2026</div>
+            <svg viewBox="0 0 600 130" width="100%" height="130" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="fill-gmb" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#00D4A0" stop-opacity="0.25"/>
+                  <stop offset="100%" stop-color="#00D4A0" stop-opacity="0"/>
+                </linearGradient>
+                <filter id="glow-gmb" x="-60%" y="-60%" width="220%" height="220%">
+                  <feGaussianBlur stdDeviation="3.5" result="blur"/>
+                  <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+              </defs>
+              <path d="M 50,90 C 110,82 90,86 150,76 C 210,66 190,69 250,58 C 310,48 290,49 350,41 C 410,33 390,36 450,30 C 510,24 490,26 550,20 L 550,98 L 50,98 Z" fill="url(#fill-gmb)"/>
+              <path d="M 50,90 C 110,82 90,86 150,76 C 210,66 190,69 250,58 C 310,48 290,49 350,41 C 410,33 390,36 450,30 C 510,24 490,26 550,20" stroke="#00FFB8" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.30"/>
+              <path d="M 50,90 C 110,82 90,86 150,76 C 210,66 190,69 250,58 C 310,48 290,49 350,41 C 410,33 390,36 450,30 C 510,24 490,26 550,20" stroke="#00D4A0" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+              <!-- 680 --><circle cx="50"  cy="90" r="6" fill="#00D4A0" opacity="0.3" filter="url(#glow-gmb)"/><circle cx="50"  cy="90" r="3.5" fill="#00D4A0"/><circle cx="50"  cy="90" r="1.8" fill="white"/><text x="50"  y="78" text-anchor="middle" fill="white" font-size="11" font-family="DM Sans,sans-serif" font-weight="600">680</text>
+              <!-- 790 --><circle cx="150" cy="76" r="6" fill="#00D4A0" opacity="0.3" filter="url(#glow-gmb)"/><circle cx="150" cy="76" r="3.5" fill="#00D4A0"/><circle cx="150" cy="76" r="1.8" fill="white"/><text x="150" y="64" text-anchor="middle" fill="white" font-size="11" font-family="DM Sans,sans-serif" font-weight="600">790</text>
+              <!-- 920 --><circle cx="250" cy="58" r="6" fill="#00D4A0" opacity="0.3" filter="url(#glow-gmb)"/><circle cx="250" cy="58" r="3.5" fill="#00D4A0"/><circle cx="250" cy="58" r="1.8" fill="white"/><text x="250" y="46" text-anchor="middle" fill="white" font-size="11" font-family="DM Sans,sans-serif" font-weight="600">920</text>
+              <!-- 1050 --><circle cx="350" cy="41" r="6" fill="#00D4A0" opacity="0.3" filter="url(#glow-gmb)"/><circle cx="350" cy="41" r="3.5" fill="#00D4A0"/><circle cx="350" cy="41" r="1.8" fill="white"/><text x="350" y="29" text-anchor="middle" fill="white" font-size="11" font-family="DM Sans,sans-serif" font-weight="600">1.050</text>
+              <!-- 1140 --><circle cx="450" cy="30" r="6" fill="#00D4A0" opacity="0.3" filter="url(#glow-gmb)"/><circle cx="450" cy="30" r="3.5" fill="#00D4A0"/><circle cx="450" cy="30" r="1.8" fill="white"/><text x="450" y="18" text-anchor="middle" fill="white" font-size="11" font-family="DM Sans,sans-serif" font-weight="600">1.140</text>
+              <!-- 1240 --><circle cx="550" cy="20" r="7" fill="#00D4A0" opacity="0.4" filter="url(#glow-gmb)"/><circle cx="550" cy="20" r="4"   fill="#00FFB8"/><circle cx="550" cy="20" r="2"   fill="white"/><text x="550" y="10" text-anchor="middle" fill="white" font-size="11" font-family="DM Sans,sans-serif" font-weight="700">1.240</text>
+              <text x="50"  y="118" text-anchor="middle" fill="#8888AA" font-size="10" font-family="DM Sans,sans-serif">Jan</text>
+              <text x="150" y="118" text-anchor="middle" fill="#8888AA" font-size="10" font-family="DM Sans,sans-serif">Fev</text>
+              <text x="250" y="118" text-anchor="middle" fill="#8888AA" font-size="10" font-family="DM Sans,sans-serif">Mar</text>
+              <text x="350" y="118" text-anchor="middle" fill="#8888AA" font-size="10" font-family="DM Sans,sans-serif">Abr</text>
+              <text x="450" y="118" text-anchor="middle" fill="#8888AA" font-size="10" font-family="DM Sans,sans-serif">Mai</text>
+              <text x="550" y="118" text-anchor="middle" fill="#8888AA" font-size="10" font-family="DM Sans,sans-serif" font-weight="600">Jun</text>
+            </svg>
+          </div>
+          <div class="card" style="padding: 16px 20px;">
+            <div class="stat-row"><span class="stat-row-label">Solicitações de rota</span><span class="stat-row-value">38</span></div>
+            <div class="stat-row"><span class="stat-row-label">Cliques no site</span><span class="stat-row-value">124</span></div>
+            <div class="stat-row"><span class="stat-row-label">Mensagens diretas</span><span class="stat-row-value">22</span></div>
+            <div class="stat-row"><span class="stat-row-label">Novas avaliações</span><span class="stat-row-value" style="color: var(--accent-green)">+7</span></div>
+          </div>
+        </div>
+
+        <!-- LinkedIn -->
+        <div class="tab-pane" id="tab-linkedin">
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <div class="metric-label">Impressões</div>
+              <div class="metric-value accent-blue">8.400</div>
+              <div class="metric-sub">visualizações</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Cliques</div>
+              <div class="metric-value">210</div>
+              <div class="metric-sub">interações</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Seguidores</div>
+              <div class="metric-value accent-green">+28</div>
+              <div class="metric-sub">novos no mês</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Publicações</div>
+              <div class="metric-value">8</div>
+              <div class="metric-sub">no período</div>
+            </div>
+          </div>
+          <div class="line-chart-container">
+            <div class="line-chart-title">Impressões LinkedIn — Jan a Jun 2026</div>
+            <svg viewBox="0 0 600 130" width="100%" height="130" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="fill-li" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#4F8EF7" stop-opacity="0.22"/>
+                  <stop offset="100%" stop-color="#7B2FFF" stop-opacity="0"/>
+                </linearGradient>
+                <filter id="glow-li" x="-60%" y="-60%" width="220%" height="220%">
+                  <feGaussianBlur stdDeviation="3.5" result="blur"/>
+                  <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+              </defs>
+              <path d="M 50,90 C 110,84 90,79 150,69 C 210,59 190,64 250,56 C 310,49 290,52 350,44 C 410,37 390,38 450,31 C 510,24 490,27 550,21 L 550,98 L 50,98 Z" fill="url(#fill-li)"/>
+              <path d="M 50,90 C 110,84 90,79 150,69 C 210,59 190,64 250,56 C 310,49 290,52 350,44 C 410,37 390,38 450,31 C 510,24 490,27 550,21" stroke="#7FB0FF" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.35"/>
+              <path d="M 50,90 C 110,84 90,79 150,69 C 210,59 190,64 250,56 C 310,49 290,52 350,44 C 410,37 390,38 450,31 C 510,24 490,27 550,21" stroke="#4F8EF7" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+              <!-- 3.8k --><circle cx="50"  cy="90" r="6" fill="#4F8EF7" opacity="0.3" filter="url(#glow-li)"/><circle cx="50"  cy="90" r="3.5" fill="#4F8EF7"/><circle cx="50"  cy="90" r="1.8" fill="white"/><text x="50"  y="78" text-anchor="middle" fill="white" font-size="11" font-family="DM Sans,sans-serif" font-weight="600">3,8k</text>
+              <!-- 5.2k --><circle cx="150" cy="69" r="6" fill="#4F8EF7" opacity="0.3" filter="url(#glow-li)"/><circle cx="150" cy="69" r="3.5" fill="#4F8EF7"/><circle cx="150" cy="69" r="1.8" fill="white"/><text x="150" y="57" text-anchor="middle" fill="white" font-size="11" font-family="DM Sans,sans-serif" font-weight="600">5,2k</text>
+              <!-- 6.1k --><circle cx="250" cy="56" r="6" fill="#4F8EF7" opacity="0.3" filter="url(#glow-li)"/><circle cx="250" cy="56" r="3.5" fill="#4F8EF7"/><circle cx="250" cy="56" r="1.8" fill="white"/><text x="250" y="44" text-anchor="middle" fill="white" font-size="11" font-family="DM Sans,sans-serif" font-weight="600">6,1k</text>
+              <!-- 7.0k --><circle cx="350" cy="44" r="6" fill="#4F8EF7" opacity="0.3" filter="url(#glow-li)"/><circle cx="350" cy="44" r="3.5" fill="#4F8EF7"/><circle cx="350" cy="44" r="1.8" fill="white"/><text x="350" y="32" text-anchor="middle" fill="white" font-size="11" font-family="DM Sans,sans-serif" font-weight="600">7,0k</text>
+              <!-- 7.8k --><circle cx="450" cy="31" r="6" fill="#4F8EF7" opacity="0.3" filter="url(#glow-li)"/><circle cx="450" cy="31" r="3.5" fill="#4F8EF7"/><circle cx="450" cy="31" r="1.8" fill="white"/><text x="450" y="19" text-anchor="middle" fill="white" font-size="11" font-family="DM Sans,sans-serif" font-weight="600">7,8k</text>
+              <!-- 8.4k --><circle cx="550" cy="21" r="7" fill="#4F8EF7" opacity="0.4" filter="url(#glow-li)"/><circle cx="550" cy="21" r="4"   fill="#7FB0FF"/><circle cx="550" cy="21" r="2"   fill="white"/><text x="550" y="11" text-anchor="middle" fill="white" font-size="11" font-family="DM Sans,sans-serif" font-weight="700">8,4k</text>
+              <text x="50"  y="118" text-anchor="middle" fill="#8888AA" font-size="10" font-family="DM Sans,sans-serif">Jan</text>
+              <text x="150" y="118" text-anchor="middle" fill="#8888AA" font-size="10" font-family="DM Sans,sans-serif">Fev</text>
+              <text x="250" y="118" text-anchor="middle" fill="#8888AA" font-size="10" font-family="DM Sans,sans-serif">Mar</text>
+              <text x="350" y="118" text-anchor="middle" fill="#8888AA" font-size="10" font-family="DM Sans,sans-serif">Abr</text>
+              <text x="450" y="118" text-anchor="middle" fill="#8888AA" font-size="10" font-family="DM Sans,sans-serif">Mai</text>
+              <text x="550" y="118" text-anchor="middle" fill="#8888AA" font-size="10" font-family="DM Sans,sans-serif" font-weight="600">Jun</text>
+            </svg>
+          </div>
+          <div class="card" style="padding: 16px 20px;">
+            <div class="stat-row"><span class="stat-row-label">Taxa de engajamento</span><span class="stat-row-value">2,5%</span></div>
+            <div class="stat-row"><span class="stat-row-label">Curtidas</span><span class="stat-row-value">187</span></div>
+            <div class="stat-row"><span class="stat-row-label">Comentários</span><span class="stat-row-value">23</span></div>
+            <div class="stat-row"><span class="stat-row-label">Reposts</span><span class="stat-row-value">14</span></div>
+          </div>
+        </div>
+
+        <!-- Presença Digital -->
+        <div class="tab-pane" id="tab-digital">
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <div class="metric-label">Score Digital</div>
+              <div class="metric-value accent-purple">74</div>
+              <div class="metric-sub">de 100 pontos</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Canais Ativos</div>
+              <div class="metric-value accent-green">6</div>
+              <div class="metric-sub">plataformas</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Avaliação Média</div>
+              <div class="metric-value accent-yellow">4,7★</div>
+              <div class="metric-sub">consolidada</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Menções</div>
+              <div class="metric-value accent-blue">38</div>
+              <div class="metric-sub">na internet</div>
+            </div>
+          </div>
+          <div class="card" style="padding: 16px 20px;">
+            <div class="stat-row"><span class="stat-row-label">Velocidade de página</span><span class="stat-row-value" style="color: var(--accent-yellow)">68/100</span></div>
+            <div class="stat-row"><span class="stat-row-label">SEO on-page</span><span class="stat-row-value" style="color: var(--accent-green)">Bom</span></div>
+            <div class="stat-row"><span class="stat-row-label">Backlinks ativos</span><span class="stat-row-value">24</span></div>
+            <div class="stat-row"><span class="stat-row-label">Presença em diretórios</span><span class="stat-row-value" style="color: var(--accent-green)">8/10</span></div>
+          </div>
+        </div>
+
+        <!-- Estratégia -->
+        <div class="tab-pane" id="tab-estrategia">
+          <div class="narrative-card">
+            <div class="narrative-title">
+              <span>📋</span> Resumo Estratégico — Junho 2026
+            </div>
+            <div class="narrative-body">
+              <p>Período 11/mai a 08/jun. Meta Ads gerou 204 leads com CPL médio de R$ 7,92. Campanha principal com melhor performance: CPL R$ 6,90. Campanha de tráfego será descontinuada. Google Ads inicia reestruturação em junho. GMN com +44% de crescimento anual e avaliação 5,0★.</p>
+            </div>
+            <div class="narrative-highlight">
+              "204 leads gerados no período — CPL de R$ 7,92 com campanha principal atingindo R$ 6,90."
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================================
+           SEÇÃO 4: DEMANDAS
+           ====================================================== -->
+      <section class="section" id="sec-demandas">
+        <div class="section-header">
+          <h1 class="section-title">Demandas</h1>
+          <p class="section-subtitle">Envie solicitações e acompanhe o status</p>
+        </div>
+
+        <div class="demand-form">
+          <div class="form-title">Nova Solicitação</div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label" for="demand-type">Tipo</label>
+              <select class="form-control" id="demand-type">
+                <option value="" disabled selected>Selecione o tipo de demanda...</option>
+                <option>Ajuste de criativos</option>
+                <option>Aprovação de conteúdo</option>
+                <option>Solicitação de relatório</option>
+                <option>Feedback sobre campanha</option>
+                <option>Reunião estratégica</option>
+                <option>Novo material / briefing</option>
+                <option>Outro</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="demand-desc">Descrição</label>
+              <textarea class="form-control" id="demand-desc" rows="3" placeholder="Descreva sua solicitação com detalhes..."></textarea>
+            </div>
+            <div>
+              <button class="btn-primary" onclick="submitDemand()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                Enviar Solicitação
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <h3 style="font-family: var(--font-head); font-weight: 700; font-size: 15px; color: var(--text-primary); margin-bottom: 12px;">Solicitações Recentes</h3>
+        <div class="demand-list" id="demand-list">
+          <div class="demand-item">
+            <div class="demand-icon">🎨</div>
+            <div class="demand-content">
+              <div class="demand-title">Ajuste nos criativos do Meta Ads</div>
+              <div class="demand-desc">Preciso atualizar as imagens dos anúncios com foto do novo projeto instalado no Batel.</div>
+              <div class="demand-date">Enviada em 05/06/2026</div>
+            </div>
+            <div class="demand-status">
+              <span class="badge badge-green badge-animated">Concluído</span>
+            </div>
+          </div>
+          <div class="demand-item">
+            <div class="demand-icon">📅</div>
+            <div class="demand-content">
+              <div class="demand-title">Reunião de alinhamento estratégico</div>
+              <div class="demand-desc">Solicito uma reunião para discutir o planejamento do segundo semestre e lançamento de novos produtos.</div>
+              <div class="demand-date">Enviada em 02/06/2026</div>
+            </div>
+            <div class="demand-status">
+              <span class="badge badge-yellow">Em andamento</span>
+            </div>
+          </div>
+          <div class="demand-item">
+            <div class="demand-icon">📊</div>
+            <div class="demand-content">
+              <div class="demand-title">Relatório de desempenho do Google Ads</div>
+              <div class="demand-desc">Gostaria de um relatório mais detalhado das palavras-chave com melhor conversão para revisar a estratégia de lances.</div>
+              <div class="demand-date">Enviada em 28/05/2026</div>
+            </div>
+            <div class="demand-status">
+              <span class="badge badge-green">Concluído</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================================
+           SEÇÃO 5: FINANCEIRO
+           ====================================================== -->
+      <section class="section" id="sec-financeiro">
+        <div class="section-header">
+          <h1 class="section-title">Financeiro</h1>
+          <p class="section-subtitle">Mensalidades e histórico de pagamentos</p>
+        </div>
+
+        <div class="financeiro-grid">
+          <!-- Vencimento -->
+          <div class="payment-card">
+            <div class="payment-card-label">📅 Próximo Vencimento</div>
+            <div class="payment-amount">R$ 3.200</div>
+            <div class="payment-due">Vence em <strong style="color: var(--text-primary)">20/06/2026</strong></div>
+            <div class="tag-row">
+              <span class="badge badge-yellow">Pendente</span>
+              <span class="badge badge-gray">Gestão de Marketing</span>
+            </div>
+          </div>
+
+          <!-- PIX -->
+          <div class="pix-card">
+            <div class="pix-label">💚 Pagar via PIX</div>
+            <div class="pix-title">Chave PIX — Hodari Marketing</div>
+            <div class="pix-key-container">
+              <span class="pix-key" id="pix-key-text">2b6a0cbf-5687-480f-80e6-0f0663469dbd</span>
+              <button class="btn-copy" id="btn-copy" onclick="copyPix()">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                Copiar
+              </button>
+            </div>
+            <p style="font-size: 12px; color: var(--text-muted); margin-top: 10px;">Após o pagamento, envie o comprovante via WhatsApp.</p>
+          </div>
+        </div>
+
+        <div class="history-section">
+          <div class="history-title">Histórico de Pagamentos</div>
+          <div class="history-list">
+            <div class="history-item">
+              <div class="history-left">
+                <div>
+                  <div class="history-month">Maio 2026</div>
+                  <div class="history-date">Pago em 15/05/2026</div>
+                </div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 14px;">
+                <div class="history-amount">R$ 3.200</div>
+                <span class="badge badge-green">Pago</span>
+              </div>
+            </div>
+            <div class="history-item">
+              <div class="history-left">
+                <div>
+                  <div class="history-month">Abril 2026</div>
+                  <div class="history-date">Pago em 18/04/2026</div>
+                </div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 14px;">
+                <div class="history-amount">R$ 3.200</div>
+                <span class="badge badge-green">Pago</span>
+              </div>
+            </div>
+            <div class="history-item">
+              <div class="history-left">
+                <div>
+                  <div class="history-month">Março 2026</div>
+                  <div class="history-date">Pago em 20/03/2026</div>
+                </div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 14px;">
+                <div class="history-amount">R$ 3.200</div>
+                <span class="badge badge-green">Pago</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================================
+           SEÇÃO 6: SUPORTE
+           ====================================================== -->
+      <section class="section" id="sec-suporte">
+        <div class="section-header">
+          <h1 class="section-title">Suporte</h1>
+          <p class="section-subtitle">Fale diretamente com sua equipe Hodari</p>
+        </div>
+
+        <div class="suporte-center">
+          <div class="suporte-card">
+            <div class="suporte-icon">💬</div>
+            <div class="suporte-title">Fale com seu responsável</div>
+            <p class="suporte-sub">
+              Entre em contato direto com o gestor da sua conta para dúvidas, alinhamentos ou urgências. Atendimento personalizado e ágil.
+            </p>
+            <a href="https://wa.me/5541991468015" target="_blank" rel="noopener" class="btn-whatsapp">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              Falar no WhatsApp
+            </a>
+            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">
+              Resposta em até <strong style="color: var(--text-secondary)">2 horas úteis</strong>
+            </p>
+
+            <div class="suporte-hours">
+              <div class="suporte-hours-title">⏰ Horário de Atendimento</div>
+              <div class="suporte-hours-text">Segunda a Sexta — 9h às 18h</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div><!-- /.content -->
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="footer-left">
+        <a href="https://hodari.pro" target="_blank" rel="noopener">Hodari Marketing Estratégico</a>
+        &nbsp;·&nbsp; hodari.pro
+      </div>
+      <div class="footer-right">Terra seca nunca mais.</div>
+    </footer>
+
+  </div><!-- /.main -->
+</div><!-- /.app-shell -->
+
+<script>
+// ============================================================
+// NAVIGATION
+// ============================================================
+function navigate(sectionId, navEl) {
+  // Hide all sections
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  // Show target
+  const target = document.getElementById('sec-' + sectionId);
+  if (target) {
+    target.classList.add('active');
+    // Re-trigger animations
+    target.querySelectorAll('.anim-in').forEach(el => {
+      el.style.animation = 'none';
+      el.offsetHeight; // reflow
+      el.style.animation = '';
+    });
+  }
+
+  // Update nav items
+  document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+  if (navEl) {
+    navEl.classList.add('active');
+  } else {
+    // Find by data-section
+    const match = document.querySelector(`[data-section="${sectionId}"]`);
+    if (match) match.classList.add('active');
+  }
+
+  // Close mobile sidebar
+  closeSidebar();
+  // Scroll to top
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ============================================================
+// TABS (Resultados)
+// ============================================================
+function switchTab(tabId, btn) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  const pane = document.getElementById(tabId);
+  if (pane) pane.classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+
+// ============================================================
+// COPY PIX
+// ============================================================
+function copyPix() {
+  const key = document.getElementById('pix-key-text').textContent.trim();
+  navigator.clipboard.writeText(key).then(() => {
+    const btn = document.getElementById('btn-copy');
+    btn.classList.add('copied');
+    btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Copiado!`;
+    showToast('✅ Chave PIX copiada!');
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copiar`;
+    }, 3000);
+  }).catch(() => {
+    // Fallback
+    const el = document.createElement('textarea');
+    el.value = key;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    showToast('✅ Chave PIX copiada!');
+  });
+}
+
+// ============================================================
+// TOAST
+// ============================================================
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2800);
+}
+
+// ============================================================
+// DEMAND FORM
+// ============================================================
+function submitDemand() {
+  const type = document.getElementById('demand-type').value;
+  const desc = document.getElementById('demand-desc').value.trim();
+
+  if (!type || !desc) {
+    showToast('⚠️ Preencha o tipo e a descrição.');
+    return;
+  }
+
+  const list = document.getElementById('demand-list');
+  const icons = { 'Ajuste de criativos': '🎨', 'Aprovação de conteúdo': '✅', 'Solicitação de relatório': '📊', 'Feedback sobre campanha': '📣', 'Reunião estratégica': '📅', 'Novo material / briefing': '📋', 'Outro': '💬' };
+  const icon = icons[type] || '💬';
+
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('pt-BR');
+
+  const item = document.createElement('div');
+  item.className = 'demand-item anim-in';
+  item.innerHTML = `
+    <div class="demand-icon">${icon}</div>
+    <div class="demand-content">
+      <div class="demand-title">${type}</div>
+      <div class="demand-desc">${desc}</div>
+      <div class="demand-date">Enviada em ${dateStr}</div>
+    </div>
+    <div class="demand-status">
+      <span class="badge badge-blue badge-animated">Enviado</span>
+    </div>
+  `;
+
+  list.insertBefore(item, list.firstChild);
+
+  document.getElementById('demand-type').value = '';
+  document.getElementById('demand-desc').value = '';
+  showToast('✅ Solicitação enviada com sucesso!');
+}
+
+// ============================================================
+// SIDEBAR MOBILE
+// ============================================================
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('overlay');
+  sidebar.classList.toggle('open');
+  overlay.classList.toggle('hidden');
+}
+
+function closeSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('overlay');
+  sidebar.classList.remove('open');
+  overlay.classList.add('hidden');
+}
+
+// ============================================================
+// SUMMARY CARD CLICK → PROJETOS
+// ============================================================
+document.querySelectorAll('.summary-card').forEach(card => {
+  card.style.cursor = 'pointer';
+});
+
+// ============================================================
+// KEYBOARD NAV
+// ============================================================
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeSidebar();
+});
+
+// ============================================================
+// TIMELINE DATE CHIP
+// ============================================================
+(function() {
+  const chip = document.getElementById('tl-date-chip');
+  if (!chip) return;
+  const now = new Date();
+  const dias = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+  const meses = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  const dia = dias[now.getDay()];
+  const num = now.getDate();
+  const mes = meses[now.getMonth()];
+  const ano = now.getFullYear();
+  chip.textContent = `${dia}, ${num} · ${mes} ${ano}`;
+})();
+
+
+// ============================================================
+// MODAL RELATÓRIO
+// ============================================================
+function openReport() {
+  document.getElementById('report-overlay').classList.add('open');
+  document.getElementById('report-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeReport() {
+  document.getElementById('report-overlay').classList.remove('open');
+  document.getElementById('report-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.getElementById('report-overlay').addEventListener('click', closeReport);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeReport(); });
+</script>
+
+<!-- ============================================================
+     MODAL: RELATÓRIO COMPLETO JUNHO 2026
+     ============================================================ -->
+<div class="report-overlay" id="report-overlay"></div>
+<div class="report-modal" id="report-modal" role="dialog" aria-modal="true" aria-label="Relatório Junho 2026">
+  <div class="report-inner">
+
+    <!-- Close sticky -->
+    <div class="report-close">
+      <button class="report-close-btn" onclick="closeReport()" aria-label="Fechar">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <!-- HEADER -->
+    <div class="rp-header">
+      <div class="rp-header-top">
+        <img src="images/logo-hodari.png" class="rp-logo" alt="Hodari" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" style="filter:invert(1) brightness(2)">
+        <span style="display:none;font-family:var(--font-head);font-weight:800;font-size:14px;color:var(--accent-purple)">HODARI</span>
+        <span class="rp-badge-report">Relatório &amp; Plano de Ação</span>
+      </div>
+      <div class="rp-title">Cobertratil — Coberturas Retráteis e Fixas de Alto Padrão</div>
+      <div class="rp-subtitle">Período: 11 mai → 08 jun 2026 &nbsp;·&nbsp; Plano de ação: 30 e 60 dias</div>
+      <div class="rp-meta-row">
+        <div class="rp-meta-item"><span class="rp-meta-label">Responsável:</span><span class="rp-meta-value">Hodari — Luan</span></div>
+        <div class="rp-meta-item"><span class="rp-meta-label">Cliente:</span><span class="rp-meta-value">Filipe Machado</span></div>
+        <div class="rp-meta-item"><span class="rp-meta-label">Documento:</span><span class="rp-meta-value">08 de junho de 2026</span></div>
+      </div>
+    </div>
+
+    <!-- ======================== PARTE 1 ======================== -->
+    <div class="rp-section">
+      <div class="rp-section-title">Parte 1 — Resultados do Período</div>
+
+      <!-- KPIs -->
+      <div class="rp-kpi-grid">
+        <div class="rp-kpi">
+          <div class="rp-kpi-value">R$ 1.617</div>
+          <div class="rp-kpi-label">Investimento Meta Ads</div>
+          <div class="rp-kpi-sub">11 mai → 08 jun</div>
+        </div>
+        <div class="rp-kpi">
+          <div class="rp-kpi-value">204</div>
+          <div class="rp-kpi-label">Leads gerados</div>
+          <div class="rp-kpi-sub">registrados no CRM</div>
+        </div>
+        <div class="rp-kpi">
+          <div class="rp-kpi-value">140</div>
+          <div class="rp-kpi-label">Orçamentos enviados</div>
+          <div class="rp-kpi-sub">de 204 leads</div>
+        </div>
+        <div class="rp-kpi">
+          <div class="rp-kpi-value">6</div>
+          <div class="rp-kpi-label">Fechamentos</div>
+          <div class="rp-kpi-sub">taxa de 4,3%</div>
+        </div>
+      </div>
+
+      <!-- META ADS -->
+      <div class="rp-section-title" style="margin-top:4px">Meta Ads — Campanhas</div>
+      <div class="rp-camp-grid">
+
+        <div class="rp-camp" style="border-color:rgba(0,212,160,0.28)">
+          <div class="rp-camp-head">
+            <span class="rp-camp-name">Campanha de Leads Principal</span>
+            <span class="badge-rp-green">Melhor desempenho</span>
+          </div>
+          <div class="rp-camp-stats">
+            <div class="rp-stat"><div class="rp-stat-label">Leads</div><div class="rp-stat-value">108</div></div>
+            <div class="rp-stat"><div class="rp-stat-label">CPL</div><div class="rp-stat-value">R$ 6,90</div></div>
+            <div class="rp-stat"><div class="rp-stat-label">Investimento</div><div class="rp-stat-value">R$ 745</div></div>
+            <div class="rp-stat"><div class="rp-stat-label">Orç. diário</div><div class="rp-stat-value">R$ 25,00</div></div>
+          </div>
+          <div class="rp-camp-note">CPL de R$ 6,90 é competitivo para o segmento de alto padrão. Campanha ativa desde janeiro — algoritmo em fase de maturidade. Base da estratégia para os próximos 30 dias.</div>
+        </div>
+
+        <div class="rp-camp" style="border-color:rgba(245,197,66,0.28)">
+          <div class="rp-camp-head">
+            <span class="rp-camp-name">Campanha de Leads Secundária</span>
+            <span class="badge-rp-yellow">Para consolidação</span>
+          </div>
+          <div class="rp-camp-stats">
+            <div class="rp-stat"><div class="rp-stat-label">Leads</div><div class="rp-stat-value">29</div></div>
+            <div class="rp-stat"><div class="rp-stat-label">CPL</div><div class="rp-stat-value">R$ 11,32</div></div>
+            <div class="rp-stat"><div class="rp-stat-label">Investimento</div><div class="rp-stat-value">R$ 328</div></div>
+            <div class="rp-stat"><div class="rp-stat-label">Orç. diário</div><div class="rp-stat-value">R$ 11,00</div></div>
+          </div>
+          <div class="rp-camp-note">CPL 64% mais alto que a campanha principal. Será consolidada na estrutura da campanha principal para evitar fragmentação e estabilizar o aprendizado do algoritmo.</div>
+        </div>
+
+        <div class="rp-camp" style="border-color:rgba(251,146,60,0.28)">
+          <div class="rp-camp-head">
+            <span class="rp-camp-name">Campanha de Tráfego</span>
+            <span class="badge-rp-orange">Em revisão</span>
+          </div>
+          <div class="rp-camp-stats">
+            <div class="rp-stat"><div class="rp-stat-label">Cliques</div><div class="rp-stat-value">2.836</div></div>
+            <div class="rp-stat"><div class="rp-stat-label">CPC</div><div class="rp-stat-value">R$ 0,19</div></div>
+            <div class="rp-stat"><div class="rp-stat-label">Investimento</div><div class="rp-stat-value">R$ 544</div></div>
+            <div class="rp-stat"><div class="rp-stat-label">Leads</div><div class="rp-stat-value">0</div></div>
+          </div>
+          <div class="rp-camp-note">Clique barato, zero conversão. Campanha de tráfego não é adequada para produto de venda consultiva. Orçamento será realocado para campanhas de leads.</div>
+        </div>
+
+      </div>
+
+      <!-- ORIGEM DOS LEADS -->
+      <div class="rp-section-title" style="margin-top:4px">Origem dos Leads</div>
+      <div class="card" style="padding:0;overflow:hidden;margin-bottom:24px">
+        <table class="rp-table">
+          <thead><tr><th>Canal</th><th>Total leads</th><th>Fechados</th><th>Conversão</th></tr></thead>
+          <tbody>
+            <tr><td>Instagram</td><td>84</td><td>3</td><td class="conv-good">7%</td></tr>
+            <tr><td>Facebook</td><td>42</td><td>0</td><td class="conv-zero">0%</td></tr>
+            <tr><td>Google</td><td>29</td><td>0</td><td class="conv-zero">0%</td></tr>
+            <tr><td>Empresa parceira</td><td>21</td><td>0</td><td class="conv-zero">0%</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- GOOGLE ADS -->
+      <div class="rp-section-title">Google Ads — Histórico</div>
+      <div class="rp-alert">
+        <div class="rp-alert-title">⚠️ Histórico sem gestão estratégica</div>
+        <div class="rp-alert-body">R$ 851 investidos sem retorno rastreável. Conta ativa sem segmentação geográfica, sem palavras-chave negativas, sem rastreamento de conversão. A Hodari assume a estruturação do zero a partir de junho 2026.</div>
+        <!-- Mini bar chart: Jan140 Fev299 Mar319 Abr91 Mai1 — max=319 -->
+        <svg viewBox="0 0 340 72" width="100%" height="72" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="rp-bar-g" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#FB923C" stop-opacity="0.9"/>
+              <stop offset="100%" stop-color="#F97316" stop-opacity="0.5"/>
+            </linearGradient>
+          </defs>
+          <!-- bars: width=36, gap=28, start x=18, max height=50 at y=14 -->
+          <!-- Jan 140/319=43.9% → h=22 y=42 --><rect x="18"  y="42" width="36" height="22" rx="5" fill="url(#rp-bar-g)" opacity="0.7"/>
+          <!-- Fev 299/319=93.7% → h=47 y=17 --><rect x="82"  y="17" width="36" height="47" rx="5" fill="url(#rp-bar-g)" opacity="0.85"/>
+          <!-- Mar 319/319=100%  → h=50 y=14 --><rect x="146" y="14" width="36" height="50" rx="5" fill="url(#rp-bar-g)"/>
+          <!-- Abr 91/319=28.5%  → h=14 y=50 --><rect x="210" y="50" width="36" height="14" rx="5" fill="url(#rp-bar-g)" opacity="0.6"/>
+          <!-- Mai 1/319≈1%      → h=4  y=60  --><rect x="274" y="60" width="36" height="4"  rx="2" fill="url(#rp-bar-g)" opacity="0.4"/>
+          <text x="36"  y="70" text-anchor="middle" fill="#8888AA" font-size="9" font-family="DM Sans,sans-serif">Jan</text>
+          <text x="100" y="70" text-anchor="middle" fill="#8888AA" font-size="9" font-family="DM Sans,sans-serif">Fev</text>
+          <text x="164" y="70" text-anchor="middle" fill="#8888AA" font-size="9" font-family="DM Sans,sans-serif">Mar</text>
+          <text x="228" y="70" text-anchor="middle" fill="#8888AA" font-size="9" font-family="DM Sans,sans-serif">Abr</text>
+          <text x="292" y="70" text-anchor="middle" fill="#8888AA" font-size="9" font-family="DM Sans,sans-serif">Mai</text>
+          <text x="36"  y="38" text-anchor="middle" fill="#FB923C" font-size="8.5" font-family="DM Sans,sans-serif" font-weight="600">R$140</text>
+          <text x="100" y="13" text-anchor="middle" fill="#FB923C" font-size="8.5" font-family="DM Sans,sans-serif" font-weight="600">R$299</text>
+          <text x="164" y="10" text-anchor="middle" fill="#FB923C" font-size="8.5" font-family="DM Sans,sans-serif" font-weight="700">R$319</text>
+          <text x="228" y="46" text-anchor="middle" fill="#FB923C" font-size="8.5" font-family="DM Sans,sans-serif" font-weight="600">R$91</text>
+          <text x="292" y="56" text-anchor="middle" fill="#FB923C" font-size="8.5" font-family="DM Sans,sans-serif" font-weight="600">R$1</text>
+        </svg>
+      </div>
+
+      <!-- GMN -->
+      <div class="rp-section-title" style="margin-top:20px">Google Meu Negócio</div>
+      <div class="rp-gmn-grid">
+        <div class="rp-gmn-card">
+          <div class="rp-gmn-value">192</div>
+          <div class="rp-gmn-label">Interações no perfil<br><span style="color:var(--text-muted);font-size:11px">abr–mai 2026</span></div>
+        </div>
+        <div class="rp-gmn-card">
+          <div class="rp-gmn-value" style="color:var(--accent-blue)">+44%</div>
+          <div class="rp-gmn-label">Crescimento anual<br><span style="color:var(--text-muted);font-size:11px">vs abr–mai 2025</span></div>
+        </div>
+        <div class="rp-gmn-card">
+          <div class="rp-gmn-value" style="color:var(--accent-yellow)">5,0★</div>
+          <div class="rp-gmn-label">Avaliação<br><span style="color:var(--text-muted);font-size:11px">44 avaliações</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================== PARTE 2 ======================== -->
+    <div class="rp-section">
+      <div class="rp-section-title">Parte 2 — Plano de Ação</div>
+
+      <!-- FASE 1 -->
+      <div class="rp-phase">
+        <span class="rp-phase-badge-1">Fase 1 · 30 dias</span>
+        <span style="color:var(--text-primary)">Junho 2026</span>
+      </div>
+      <div class="rp-action-grid">
+
+        <!-- Meta Ads -->
+        <div class="rp-action">
+          <div class="rp-action-head">
+            <span style="font-size:16px">📣</span>
+            <span class="rp-action-title">Meta Ads</span>
+            <span class="badge-rp-b2c">B2C</span>
+            <span class="rp-action-budget">R$ 1.800/mês</span>
+          </div>
+          <div class="rp-action-body">
+            <strong>Campanha: Geração de Leads B2C — Alto Padrão</strong> · Objetivo: Leads · R$ 60/dia
+            <span class="rp-sub-label">Conjunto 1 — Bairros Classe A · Curitiba</span>
+            Batel, Champagnat, Água Verde, Seminário, Cabral, Ecoville · Raio 1km · Idade 30–60<br>
+            Anúncios: Vídeo 9:16 projeto em condomínio · Carrossel antes/depois · Imagem estática luxuosa
+            <span class="rp-sub-label">Conjunto 2 — Condomínios Fechados · SJP e Pinhais</span>
+            Idade 30–65 · Interesse: decoração, arquitetura, imóveis alto padrão<br>
+            Anúncios: Vídeo cobertura em condomínio · Carrossel portfólio · Imagem técnica
+            <span class="rp-sub-label">Conjunto 3 — Remarketing</span>
+            Visitantes 30 dias + leads frios · Excluir clientes ativos<br>
+            Anúncios: Prova social "44 avaliações 5★" · Vídeo depoimento 15s
+            <span class="rp-sub-label">Notas</span>
+            60% Instagram Stories/Reels + 40% Facebook Feed · 8 artes no mês
+          </div>
+        </div>
+
+        <!-- Google Ads -->
+        <div class="rp-action">
+          <div class="rp-action-head">
+            <span style="font-size:16px">🔍</span>
+            <span class="rp-action-title">Google Ads</span>
+            <span class="badge-rp-b2c">B2C</span>
+            <span class="rp-action-budget">R$ 700/mês</span>
+          </div>
+          <div class="rp-action-body">
+            <strong>Campanha Search Alta Intenção</strong> · R$ 16/dia
+            <span class="rp-sub-label">Grupos de anúncio</span>
+            Grupo 1 — Cobertura Retrátil: KW exato e frase<br>
+            Grupo 2 — Cobertura Fixa e Pergolado: KW exato e frase<br>
+            Grupo 3 — Concorrência: KW frase e ampla
+            <span class="rp-sub-label">Campanha Display Remarketing</span>
+            R$ 7/dia · Visitantes 30 dias<br>
+            Banners: 300×250 · 728×90 · 160×600
+            <span class="rp-sub-label">Notas</span>
+            GTM + evento conversão · Palavras-chave negativas · 4 extensões obrigatórias
+          </div>
+        </div>
+
+        <!-- GMN -->
+        <div class="rp-action">
+          <div class="rp-action-head">
+            <span style="font-size:16px">📍</span>
+            <span class="rp-action-title">Google Meu Negócio</span>
+            <span style="margin-left:auto;font-size:11px;color:var(--text-muted)">Sem custo de mídia</span>
+          </div>
+          <div class="rp-action-body">
+            1 post/semana com projeto executado · Responder 44 avaliações existentes<br>
+            Atualizar seção Serviços com 4 produtos · Mínimo 8 fotos novas · Ativar Mensagens
+          </div>
+        </div>
+
+        <!-- LinkedIn -->
+        <div class="rp-action">
+          <div class="rp-action-head">
+            <span style="font-size:16px">💼</span>
+            <span class="rp-action-title">LinkedIn</span>
+            <span class="badge-rp-b2b">B2B</span>
+            <span class="rp-action-budget" style="color:var(--accent-blue)">R$ 500 produção</span>
+          </div>
+          <div class="rp-action-body">
+            Criar conta Campaign Manager · Instalar LinkedIn Insight Tag<br>
+            Produzir PDF técnico para arquitetos (entrega 30/jun) · Estruturar página da empresa
+          </div>
+        </div>
+
+      </div>
+
+      <div class="rp-divider"></div>
+
+      <!-- FASE 2 -->
+      <div class="rp-phase" style="margin-top:4px">
+        <span class="rp-phase-badge-2">Fase 2 · 60 dias</span>
+        <span style="color:var(--text-primary)">Julho 2026</span>
+      </div>
+      <div class="rp-action-grid">
+
+        <!-- Meta Ads F2 -->
+        <div class="rp-action">
+          <div class="rp-action-head">
+            <span style="font-size:16px">📣</span>
+            <span class="rp-action-title">Meta Ads — Escala</span>
+            <span class="badge-rp-b2c">B2C</span>
+          </div>
+          <div class="rp-action-body">
+            Analisar Fase 1 — escalar 2 melhores conjuntos<br>
+            Teste A/B: vídeo obra vs projeto finalizado vs depoimento<br>
+            Novo conjunto Classe A (ticket >R$100k)<br>
+            Lookalike 1% baseado em leads convertidos · 6 artes novas na Fase 2
+          </div>
+        </div>
+
+        <!-- Google Ads F2 -->
+        <div class="rp-action">
+          <div class="rp-action-head">
+            <span style="font-size:16px">🔍</span>
+            <span class="rp-action-title">Google Ads — Otimização</span>
+            <span class="badge-rp-b2c">B2C</span>
+          </div>
+          <div class="rp-action-body">
+            Ajuste de lances e negativas com base em dados reais<br>
+            Expandir para keywords de intenção média<br>
+            Ativar extensões de promoção · Criar campanha Performance Max<br>
+            Revisar Quality Score
+          </div>
+        </div>
+
+        <!-- LinkedIn Ads F2 -->
+        <div class="rp-action">
+          <div class="rp-action-head">
+            <span style="font-size:16px">💼</span>
+            <span class="rp-action-title">LinkedIn Ads</span>
+            <span class="badge-rp-b2b">B2B</span>
+            <span class="rp-action-budget" style="color:var(--accent-blue)">R$ 500/mês</span>
+          </div>
+          <div class="rp-action-body">
+            <strong>Conjunto 1 — Arquitetos e Designers · Curitiba</strong><br>
+            Cargo: Arquiteto, Designer, Eng. Civil · 3+ anos de experiência<br>
+            Lead Gen 1: Formulário nativo + PDF técnico com parceria e comissão<br>
+            Lead Gen 2: Sponsored Content — projeto alto padrão
+            <span class="rp-sub-label">Conjunto 2 — Construtoras e Incorporadoras</span>
+            Cargo: Diretor, Gerente de Obras, Sócio<br>
+            Message Ad: InMail com PDF técnico + visita técnica
+            <span class="rp-sub-label">Meta julho</span>
+            15 a 30 leads B2B qualificados
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- DISTRIBUIÇÃO FINANCEIRA -->
+    <div class="rp-section">
+      <div class="rp-section-title">Distribuição Financeira</div>
+      <div class="card" style="padding:0;overflow:hidden;margin-bottom:0">
+        <table class="rp-fin-table">
+          <thead><tr><th>Canal</th><th>Segmento</th><th>Fase 1 · Jun</th><th>Fase 2 · Jul+</th></tr></thead>
+          <tbody>
+            <tr><td>Meta Ads</td><td>B2C</td><td>R$ 1.800</td><td>R$ 1.800</td></tr>
+            <tr><td>Google Ads</td><td>B2C</td><td>R$ 700</td><td>R$ 700</td></tr>
+            <tr><td>LinkedIn Ads</td><td>B2B</td><td>Produção</td><td>R$ 500</td></tr>
+            <tr><td>Total</td><td>—</td><td>R$ 2.500</td><td>R$ 3.000</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- CRONOGRAMA -->
+    <div class="rp-section">
+      <div class="rp-section-title">Cronograma</div>
+      <div class="rp-crono-grid">
+        <div class="rp-crono-item">
+          <div class="rp-crono-week">Semana 1 · até 15/jun</div>
+          <div class="rp-crono-body">Consolidação Meta Ads + GTM + eventos de conversão</div>
+        </div>
+        <div class="rp-crono-item">
+          <div class="rp-crono-week">Semana 2 · até 22/jun</div>
+          <div class="rp-crono-body">Google Ads Search (3 grupos) + Display Remarketing + posts GMB</div>
+        </div>
+        <div class="rp-crono-item">
+          <div class="rp-crono-week">Semana 3 · até 30/jun</div>
+          <div class="rp-crono-body">PDF arquitetos + LinkedIn Campaign Manager + Insight Tag + 1º relatório Google Ads</div>
+        </div>
+        <div class="rp-crono-item">
+          <div class="rp-crono-week">Semana 5 · até 15/jul</div>
+          <div class="rp-crono-body">Análise 30 dias Google Ads + ajustes + LinkedIn Ads com PDF</div>
+        </div>
+        <div class="rp-crono-item">
+          <div class="rp-crono-week">Semana 6 · até 22/jul</div>
+          <div class="rp-crono-body">Testes A/B Meta + lookalike + conjunto Classe A</div>
+        </div>
+        <div class="rp-crono-item">
+          <div class="rp-crono-week">Semana 8 · 08/ago</div>
+          <div class="rp-crono-body">Relatório completo 60 dias + revisão + estratégia 3º mês</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="rp-footer">
+      <p><strong>Hodari Marketing Estratégico · Gestão de Tráfego Pago</strong></p>
+      <p>Documento gerado em 08 de junho de 2026</p>
+      <p>Cliente: Cobertratil — Filipe Machado &nbsp;·&nbsp; Responsável: Luan &nbsp;·&nbsp; hodari.pro</p>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
